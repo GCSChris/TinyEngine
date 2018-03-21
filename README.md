@@ -4,14 +4,15 @@ Note: There is only 1 part to the final project. This is it--the grand finale!
 
 ## Team
 
-Team Name: (Something cool here)
+Team Name: Bjarne Stroustrup Appreciation Station
+Option Chosen: Option 2
 
-*TODO*:
+
 Update your Team member Names here (Up to 4) You will work with this same team through parts 1, 2, and 3.
 
--
--
--
+- Tyler Gier
+- Christopher DiNome
+- Caroline Pasyanos
 -
 
 
@@ -55,14 +56,18 @@ A Minimum Viable Product (MVP) is the smallest subset of features that you consi
 
 (TODO: Edit these)
 MVP
-- feature 1
-- feature 2
-- etc.
+- Engine based in C++
+- Users must be able to create games in python scripts
+- Users can provide/use arbitrary assets in supported formats (images, audio, text, etc)
+- Users can make 2D Top-down games (e.g. Zelda, Final Fantasy, Binding of Isaac)
+- Users can create maps using a tile editor (expanded upon from assignment 2)
+- User can create multiple levels
+- User can write scripts using external text editors
 
-Strecth Goals
-- features 1
-- feature 2
-- etc
+Stretch Goals
+- Visual preview of state 0 (the first frame) of the game that updates with code
+- User can place scripts inside the tile editor (i.e. could create tiles that run special scripts on collision)
+- Users can build a single executable for the game (if we build a strong enough GUI)
 
 ## Requirements (For either option)
 
