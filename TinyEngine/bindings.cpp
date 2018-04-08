@@ -9,10 +9,11 @@
 // This gives an example of how a programmer
 // may support multiple platforms with different
 // dependencies.
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_image.h>
+#if defined(LINUX) || defined(MINGW)
+    #include <SDL2/SDL.h>
+#else // This works for Mac
+    #include <SDL.h>
+#endif
 
 // The glad library helps setup OpenGL extensions.
 #include <glad/glad.h>
@@ -24,13 +25,10 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <ResourceManager.h>
 
-#include "SFXManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
-//
-//
-//
 class SDLGraphicsProgram{
 public:
 
@@ -59,7 +57,7 @@ public:
     // Draws the given frame in a sprite sheet
     void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
     // Plays music from the given resource name_
-    void PlayMusic(std::string path);
+    void PlayMusic(std::string);
     // Toggles if the music is being played, returning if the music is playing after
     bool ToggleMusic();
     // Plays the sound effect at the given path
@@ -233,47 +231,60 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
     SDL_SetRenderDrawColor(gRenderer, a, r, g, b);
 }
 
+// todo
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
+  SDL_Texture* tex = ResourceManager::instance().getScaledTexture(gRenderer, imgPath, w, h);
 
+  SDL_Rect dest = { x, y, w, h };
+  SDL_RenderCopy(gRenderer, tex, NULL, &dest);
 }
 
+// todo
 void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
 
 }
 
-void SDLGraphicsProgram::PlayMusic(std::string path) {
-  SFXManager::instance().playMusic(path);
+// todo
+void SDLGraphicsProgram::PlayMusic(std::string) {
 
 }
 
+// todo
 bool SDLGraphicsProgram::ToggleMusic() {
 
 }
 
+// todo
 void SDLGraphicsProgram::PlaySFX(std::string path) {
-  SFXManager::instance().playMusic(path);
+
 }
 
+// todo
 void SDLGraphicsProgram::SetMusicVolume(int volume) {
-  SFXManager::instance().setMusicVolume(volume);
+
 }
 
+// todo
 int SDLGraphicsProgram::GetMusicVolume() {
-  SFXManager::instance().getMusicVolume();
+
 }
 
+// todo
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
 
 }
 
+// todo
 void SDLGraphicsProgram::SetFramerate(int fps) {
 
 }
 
+// todo
 bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
 
 }
 
+// todo
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
 {
     std::map<std::string, int> binds;
@@ -319,7 +330,7 @@ namespace py = pybind11;
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(mygameengine, m){
+PYBIND11_MODULE(tinyengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
@@ -330,6 +341,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("loop", &SDLGraphicsProgram::loop)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
+            .def("DrawImage", &SDLGraphicsProgram::DrawImage)
             .def("SetColor", &SDLGraphicsProgram::SetColor) ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)

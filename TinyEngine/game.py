@@ -56,7 +56,8 @@ class Ball:
         self.dy = (random.randint(1,2) * 2 - 3)
 
     def draw(self):
-        engine.DrawRectangle(self.x,self.y,self.size,self.size,True);
+        # engine.DrawRectangle(self.x,self.y,self.size,self.size,True);
+        engine.DrawImage("banana.png", self.x, self.y, self.size, self.size)
 
     def tick(self):
         self.x += self.dx
