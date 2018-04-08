@@ -95,10 +95,8 @@ while not engine.pressed("q") :
     p2.bounce(ball)
     ball.tick()
 
-    if engine.pressed("w") or engine.pressed("s"):
-        p1.move(engine.pressed("w"))
-    if engine.pressed("up") or engine.pressed("down"):
-        p2.move(engine.pressed("up"))
+    if engine.pressed("w"):
+        engine.PlaySFX("break.wav");
 
     p1.draw()
     p2.draw()

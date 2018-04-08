@@ -247,11 +247,12 @@ void SDLGraphicsProgram::PlayMusic(std::string path) {
 }
 
 bool SDLGraphicsProgram::ToggleMusic() {
-
+  SFXManager::instance().toggleMusic();
+  return (Mix_PlayingMusic() != 0);
 }
 
 void SDLGraphicsProgram::PlaySFX(std::string path) {
-  SFXManager::instance().playMusic(path);
+  SFXManager::instance().playSFX(path);
 }
 
 void SDLGraphicsProgram::SetMusicVolume(int volume) {
@@ -331,7 +332,11 @@ PYBIND11_MODULE(mygameengine, m){
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
             .def("SetColor", &SDLGraphicsProgram::SetColor)
-            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic);
+            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
+            .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
+            .def("ToggleMusic", &SDLGraphicsProgram::ToggleMusic)
+            .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
+            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume) ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
