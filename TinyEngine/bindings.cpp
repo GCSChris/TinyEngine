@@ -26,6 +26,7 @@
 #include <string>
 
 #include "SFXManager.h"
+#include "UIManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
 //
@@ -83,7 +84,7 @@ private:
     int screenHeight;
     int screenWidth;
     // The window we'll be rendering to
-    SDL_Window* gWindow ;
+    SDL_Window* gWindow;
     // Our renderer
     SDL_Renderer* gRenderer;
 
@@ -127,7 +128,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
         }
   	}
 
-
+    TTF_Init(); //TODO
 
     // If initialization did not work, then print out a list of errors in the constructor.
     if(!success){
@@ -263,8 +264,14 @@ int SDLGraphicsProgram::GetMusicVolume() {
   SFXManager::instance().getMusicVolume();
 }
 
-void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+// void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
+  // SDL_Color textColor = { r, g, b, a };
+  // UIManager::instance().SetTextColor(textColor);
+// }
 
+void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+  SDL_Color textColor = { 255, 255, 255, 255 };
+  UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
 void SDLGraphicsProgram::SetFramerate(int fps) {
@@ -336,7 +343,9 @@ PYBIND11_MODULE(mygameengine, m){
             .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
             .def("ToggleMusic", &SDLGraphicsProgram::ToggleMusic)
             .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
-            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume) ;
+            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume)
+            .def("RenderText", &SDLGraphicsProgram::RenderText)
+    ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }

@@ -98,6 +98,8 @@ while not engine.pressed("q") :
     if engine.pressed("w"):
         engine.PlaySFX("break.wav");
 
+    engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
+
     p1.draw()
     p2.draw()
     ball.draw()
