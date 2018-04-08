@@ -95,8 +95,12 @@ while not engine.pressed("q") :
     p2.bounce(ball)
     ball.tick()
 
-    if engine.pressed("w"):
+    if engine.pressed("space"):
         engine.PlaySFX("break.wav");
+    if engine.pressed("tab") or engine.pressed("l_shift"):
+        p1.move(engine.pressed("tab"))
+    if engine.pressed("i") or engine.pressed("k"):
+        p2.move(engine.pressed("i"))
 
     engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
 
