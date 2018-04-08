@@ -102,6 +102,8 @@ while not engine.pressed("q") :
     if engine.pressed("i") or engine.pressed("k"):
         p2.move(engine.pressed("i"))
 
+    engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
+
     p1.draw()
     p2.draw()
     ball.draw()
