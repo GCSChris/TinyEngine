@@ -294,8 +294,7 @@ std::map<std::string, int> SDLGraphicsProgram::keymap = []
     binds["delete"] = SDLK_DELETE;
     binds["home"] = SDLK_HOME;
 
-
-    binds["`"] = SDLK_q;
+    binds["`"] = SDLK_BACKQUOTE;
     binds["1"] = SDLK_1;
     binds["2"] = SDLK_2;
     binds["3"] = SDLK_3;
