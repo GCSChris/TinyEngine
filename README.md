@@ -1,4 +1,4 @@
-# FinalProject
+# FinalProject - TinyEngine
 
 Note: There is only 1 part to the final project. This is it--the grand finale!
 
@@ -13,7 +13,6 @@ Update your Team member Names here (Up to 4) You will work with this same team t
 - Tyler Gier
 - Christopher DiNome
 - Caroline Pasyanos
--
 
 
 ## Final Project - Description
@@ -54,20 +53,20 @@ The constraints are that you have to build the majority of your technology. 3rd 
 
 A Minimum Viable Product (MVP) is the smallest subset of features that you consider a project to be a success. Make a list below of the features you consider to be in your MVP. Then make a list of features that are 'stretch goals' that you think you can achieve.
 
-(TODO: Edit these)
 MVP
 - Engine based in C++
-- Users must be able to create games in python scripts
-- Users can provide/use arbitrary assets in supported formats (images, audio, text, etc)
-- Users can make 2D Top-down games (e.g. Zelda, Final Fantasy, Binding of Isaac)
-- Users can create maps using a tile editor (expanded upon from assignment 2)
-- User can create multiple levels
-- User can write scripts using external text editors
+- User can create arbitrary 2D games in python using our C++ library
+- Library supports rendering images, rendering text, playing music and SFX
+- Library supports animations and sprite sheets (rendering indexed images in a larger image file)
+- User can provide abitrary images in supported formats (bmp, png)
+- User can provide sound effects, custom music and custom fonts
+- Library provides out of the box math support for vectors and matrices
+- 2 to 3 different games demoing the flexibility and features of TinyEngine
 
 Stretch Goals
-- Visual preview of state 0 (the first frame) of the game that updates with code
-- User can place scripts inside the tile editor (i.e. could create tiles that run special scripts on collision)
-- Users can build a single executable for the game (if we build a strong enough GUI)
+- Basic physics library module (to handle things like forces)
+- User can provide a sprite sheet and frame rate, and then the library will automatically animate the sprite when rendered
+
 
 ## Requirements (For either option)
 
