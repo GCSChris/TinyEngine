@@ -9,11 +9,10 @@
 // This gives an example of how a programmer
 // may support multiple platforms with different
 // dependencies.
-#if defined(LINUX) || defined(MINGW)
-    #include <SDL2/SDL.h>
-#else // This works for Mac
-    #include <SDL.h>
-#endif
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 
 // The glad library helps setup OpenGL extensions.
 #include <glad/glad.h>
@@ -60,7 +59,7 @@ public:
     // Draws the given frame in a sprite sheet
     void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
     // Plays music from the given resource name_
-    void PlayMusic(std::string);
+    void PlayMusic(std::string path);
     // Toggles if the music is being played, returning if the music is playing after
     bool ToggleMusic();
     // Plays the sound effect at the given path
@@ -243,7 +242,7 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int
 }
 
 void SDLGraphicsProgram::PlayMusic(std::string path) {
-  SFXManager::instance().playMusic(string);
+  SFXManager::instance().playMusic(path);
 
 }
 
@@ -320,7 +319,7 @@ namespace py = pybind11;
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(tinyengine, m){
+PYBIND11_MODULE(mygameengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
