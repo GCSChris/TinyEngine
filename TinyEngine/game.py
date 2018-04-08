@@ -42,9 +42,8 @@ class Paddle:
             self.y = 0
 
     def bounce(self, ball):
-        if self.y + self.h < ball.y or self.y > ball.y + ball.size or self.x + self.w < ball.x or self.x > ball.x + ball.size :
-            return
-        ball.dx*=-1
+        if (engine.RectIntersect(self.x, self.y, self.w, self.h, ball.x, ball.y, ball.size, ball.size)):
+            ball.dx*=-1
 
 
 class Ball:
@@ -87,6 +86,7 @@ ball = Ball()
 engine.PlayMusic("music.wav");
 
 print("Setting up game loop")
+engine.SetFramerate(90);
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
@@ -110,6 +110,6 @@ while not engine.pressed("q") :
     ball.draw()
 
     # Add a little delay
-    engine.delay(8);
+    engine.FrameRateDelay();
     # Refresh the screen
     engine.flip();
