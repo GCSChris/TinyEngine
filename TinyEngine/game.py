@@ -27,6 +27,7 @@ class Paddle:
         self.y = MAX_SIZE//2 - self.h//2
 
     def draw(self):
+        engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
 
     def move(self, up):
@@ -56,6 +57,7 @@ class Ball:
         self.dy = (random.randint(1,2) * 2 - 3)
 
     def draw(self):
+        engine.SetColor(255, 0, 0, 255);
         engine.DrawRectangle(self.x,self.y,self.size,self.size,True);
 
     def tick(self):
@@ -81,6 +83,8 @@ class Ball:
 p1 = Paddle(20)
 p2 = Paddle(370)
 ball = Ball()
+
+engine.PlayMusic("music.wav");
 
 print("Setting up game loop")
 while not engine.pressed("q") :

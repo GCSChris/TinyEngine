@@ -330,7 +330,8 @@ PYBIND11_MODULE(mygameengine, m){
             .def("loop", &SDLGraphicsProgram::loop)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
-            .def("SetColor", &SDLGraphicsProgram::SetColor) ;
+            .def("SetColor", &SDLGraphicsProgram::SetColor)
+            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic);
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
