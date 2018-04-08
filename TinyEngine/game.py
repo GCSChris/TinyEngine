@@ -102,6 +102,7 @@ while not engine.pressed("q") :
     if engine.pressed("i") or engine.pressed("k"):
         p2.move(engine.pressed("i"))
 
+    engine.SetTextColor(255, 0, 0, 255);
     engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
 
     p1.draw()
