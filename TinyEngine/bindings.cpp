@@ -72,6 +72,8 @@ public:
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
 
+    // Should be call at the end of each game loop. Used for frame limiting
+    void ApplyFrameCap();
     // Sets the framerate to cap at the given frames per second
     void SetFramerate(int fps);
     // returns if the given rectangles overlap
@@ -88,6 +90,12 @@ private:
     // Our renderer
     SDL_Renderer* gRenderer;
 
+    // the frame count at the beginning of the game loop
+    int frameTickCount = 0;
+    // The current game framerate
+    int framerate = 60;
+
+    // The state of the keys
     static std::map<std::string, int> keymap;
 };
 
@@ -274,12 +282,24 @@ void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int
   UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
-void SDLGraphicsProgram::SetFramerate(int fps) {
+void SDLGraphicsProgram::ApplyFrameCap() {
+  int tickCount = SDL_GetTicks();
+  int delayTime = 1000 / framerate - (tickCount - frameTickCount);
+  if (delayTime > 0) {
+    SDL_Delay(delayTime);
+  }
+  frameTickCount = tickCount;
+}
 
+void SDLGraphicsProgram::SetFramerate(int fps) {
+  framerate = fps;
 }
 
 bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+  SDL_Rect r1 = {x1, y1, w1, h1};
+  SDL_Rect r2 = {x2, y2, w2, h2};
 
+  return (SDL_HasIntersection(&r1, &r2));
 }
 
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
@@ -411,9 +431,8 @@ PYBIND11_MODULE(mygameengine, m){
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
             .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
             .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
-            .def("delay", &SDLGraphicsProgram::delay)
             .def("flip", &SDLGraphicsProgram::flip)
-            .def("loop", &SDLGraphicsProgram::loop)
+            .def("delay", &SDLGraphicsProgram::delay)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
             .def("SetColor", &SDLGraphicsProgram::SetColor)
@@ -423,6 +442,9 @@ PYBIND11_MODULE(mygameengine, m){
             .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
             .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume)
             .def("RenderText", &SDLGraphicsProgram::RenderText)
+            .def("FrameRateDelay", &SDLGraphicsProgram::ApplyFrameCap)
+            .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
+            .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
     ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
