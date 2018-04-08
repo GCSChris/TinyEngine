@@ -27,8 +27,9 @@ class Paddle:
         self.y = MAX_SIZE//2 - self.h//2
 
     def draw(self):
-        engine.SetColor(255, 255, 255, 255);
+        # engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
+        # engine.DrawImage("banana.png", self.x, self.y, self.size, self.size);
 
     def move(self, up):
         change = 2

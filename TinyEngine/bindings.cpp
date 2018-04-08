@@ -247,7 +247,10 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-
+  // SDL_Texture* tex = ResourceManager::instance().getScaledTexture(gRenderer, imgPath, w, h);
+  // SDL_Texture* tex = ResourceManager::instance().getTexture(imgPath, gRenderer);
+  // SDL_Rect dest = { x, y, w, h };
+  // SDL_RenderCopy(gRenderer, tex, NULL, &dest);
 }
 
 void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
