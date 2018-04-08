@@ -39,6 +39,18 @@ struct Vector3D{
         return ((&x)[i]);
     }
 
+    float getX() {
+      return x;
+    }
+
+    float getY() {
+      return y;
+    }
+
+    float getZ() {
+      return z;
+    }
+
     // Multiplication Operator
     Vector3D& operator *=(float s){
         x *= s;
@@ -73,70 +85,57 @@ struct Vector3D{
 
 };
 
-// Compute the dot product of a Vector3D
-
-inline float Dot(const Vector3D& a, const Vector3D& b){
+Dot(const Vector3D& a, const Vector3D& b){
   float dotProd = (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
   return dotProd;
 }
 
-// Multiplication of a vector by a scalar values
-
-inline Vector3D operator *(const Vector3D& v, float s){
+Vector3D vectorMult(const Vector3D& v, float s){
   Vector3D vec = Vector3D(v[0] * s, v[1] * s, v[2] * s);
   return vec;
 }
 
-// Division of a vector by a scalar value.
-
-
-inline Vector3D operator /(const Vector3D& v, float s){
+Vector3D vectorDiv(const Vector3D& v, float s){
   Vector3D vec = Vector3D(v[0] / s, v[1] / s, v[2] / s);
   return vec;
 }
 
-
-
-inline Vector3D operator -(const Vector3D& v){
-  return v * -1;
+Vector3D vectorInverse(const Vector3D& v){
+  return vectorMult(v, -1);
 }
 
-
-inline float Magnitude(const Vector3D& v){
+float Magnitude(const Vector3D& v){
   float squares = (v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]);
   float mag = sqrt(squares);
   return mag;
 }
 
 
-inline Vector3D operator +(const Vector3D& a, const Vector3D& b){
+Vector3D vectorAdd(const Vector3D& a, const Vector3D& b){
   Vector3D vec = Vector3D(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
   return vec;
 }
 
-
-inline Vector3D operator -(const Vector3D& a, const Vector3D& b){
+Vector3D vectorSub(const Vector3D& a, const Vector3D& b){
   Vector3D vec = Vector3D(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
   return vec;
 }
 
 // Vector Projection - Projects b onto a
-inline Vector3D Project(const Vector3D& a, const Vector3D& b){
+Vector3D Project(const Vector3D& a, const Vector3D& b){
 	float magA = Magnitude(a);
   float scalar = Dot(a, b) / (magA * magA);
-  Vector3D vec = a * scalar;
+  Vector3D vec = vectorMult(a, scalar);
   return vec;
 }
 
-
-inline Vector3D Normalize(const Vector3D& v){
+Vector3D Normalize(const Vector3D& v){
   float magnitude = Magnitude(v);
   Vector3D vec = Vector3D(v.x / magnitude, v.y / magnitude, v.z / magnitude);
   return vec;
 }
 
-
-inline Vector3D CrossProduct(const Vector3D& a, const Vector3D& b){
+Vector3D CrossProduct(const Vector3D& a, const Vector3D& b){
   float x = a[1] * b[2] - a[2] * b[1];
   float y = a[2] * b[0] - a[0] * b[2];
   float z = a[0] * b[1] - a[1] * b[0];
@@ -170,6 +169,10 @@ public:
       n[2][0] = c.x; n[2][1] = c.y; n[2][2] = c.z;
     }
 
+    float get(int i, int j) {
+      return n[i][j];
+    }
+
     // Index operator with two dimensions
     // Example: M(1,1) returns row 1 and column 1 of matrix M.
     float& operator ()(int i, int j){
@@ -195,7 +198,7 @@ public:
 };
 
 // Matrix Multiplication
-inline Matrix3D operator *(const Matrix3D& A, const Matrix3D& B){
+Matrix3D multMatrixMatrix(const Matrix3D& A, const Matrix3D& B){
   float p00 = Dot(Vector3D(A[0][0], A[0][1], A[0][2]), Vector3D(B[0][0], B[1][0], B[2][0]));
   float p01 = Dot(Vector3D(A[0][0], A[0][1], A[0][2]), Vector3D(B[0][1], B[1][1], B[2][1]));
   float p02 = Dot(Vector3D(A[0][0], A[0][1], A[0][2]), Vector3D(B[0][2], B[1][2], B[2][2]));
@@ -212,7 +215,7 @@ inline Matrix3D operator *(const Matrix3D& A, const Matrix3D& B){
 }
 
 // Matrix multiply by a vector
-inline Vector3D operator *(const Matrix3D& M, const Vector3D& v){
+Vector3D multMatrixVector(const Matrix3D& M, const Vector3D& v){
   float x = Dot(Vector3D(M[0][0], M[0][1], M[0][2]), v);
   float y = Dot(Vector3D(M[1][0], M[1][1], M[1][2]), v);
   float z = Dot(Vector3D(M[2][0], M[2][1], M[2][2]), v);
@@ -220,36 +223,6 @@ inline Vector3D operator *(const Matrix3D& M, const Vector3D& v){
   return vec;
 }
 
-/** The TinyMath class for use in the pybind module*/
-class TinyMath {
-public:
-  Vector3D makeVector2D(float x, float y);
-  Vector3D makeVector3D(float x, float y, float z);
-  Vector3D vectorAdd(Vector3D a, Vector3D b);
-  Vector3D vectorSubtract(Vector3D a, Vector3D b);
-  Vector3D vectorMultiply(Vector3D a, float scalar);
-  Vector3D vectorDivide(Vector3D a, float scalar);
-  Vector3D vectorInverse(Vector3D a);
-  Vector3D vectorDot(Vector3D a, Vector3D b);
-  Vector3D vectorMagnitude(Vector3D a);
-  Vector3D vectorNormalize(Vector3D a, Vector3D b);
-  Vector3D vectorCrossProd(Vector3D a, Vector3D b);
-  Vector3D vectorProject(Vector3D a, Vector3D b);
-  Matrix3D matrixMult(Matrix3D m1, Matrix3D m2);
-  Vector3D matrixVectorMult(Matrix3D m, Vector3D v);
-};
-
-Vector3D TinyMath::makeVector2D(float x, float y) {
-  return Vector3D(x, y, 0);
-}
-
-Vector3D TinyMath::makeVector3D(float x, float y, float z) {
-  return Vector3D(x, y, z);
-}
-
-Vector3D TinyMath::vectorAdd(Vector3D a, Vector3D b) {
-  return a + b;
-}
 
 // Include the pybindings
 #include <pybind11/pybind11.h>
@@ -259,26 +232,28 @@ namespace py = pybind11;
 PYBIND11_MODULE(tinymath, m){
     m.doc() = "The TinyMath modules gives support for vector and matrix math"; // Optional docstring
 
-    py::class_<TinyMath>(m, "TinyMath")
-            .def("vector2D", &TinyMath::makeVector2D);
-            .def("vector3D", &TinyMath::makeVector3D);
-            .def("vectorAdd", &TinyMath::vectorAdd);
+    m.def("vAdd", &vectorAdd, "Adds two vectors together, returning the result");
+    m.def("vSub", &vectorSub, "Subtracts two vectors, returning the result");
+    m.def("vMul", &vectorMult, "Multiplies a vector by a scalar, returning the result");
+    m.def("vDiv", &vectorDiv, "Divides a vector by a scalar, returning the result");
+    m.def("vInverse", &vectorInverse, "Returns the inverse of a vector");
+    m.def("vMag", &Magnitude, "Returns the magnitude of the vector");
+    m.def("vNormalize", &Normalize, "Returns a new vector that is the given vector scaled to magnitude 1");
+    m.def("vDot", &Dot, "Returns the dot product of the given vectors");
+    m.def("vProject", &Project, "Returns the vector projection");
+    m.def("vCrossProduct", &CrossProduct, "Returns the cross product");
+    m.def("mMultMM", &multMatrixMatrix, "Returns a Matrix3D that is the result of multiplying the given Matrix3Ds");
+    m.def("mMultMV", &multMatrixVector, "Returns a Vector3D that is the result of multiplying the given Matrix3D and Vector3D");
+
+    py::class_<Vector3D>(m, "Vector3D")
+      .def(py::init<float,float,float>(), py::arg("x"), py::arg("y"), py::arg("z"))
+      .def("x", &Vector3D::getX)
+      .def("y", &Vector3D::getY)
+      .def("z", &Vector3D::getZ) ;
+
+    py::class_<Matrix3D>(m, "Matrix3D")
+      .def(py::init<Vector3D, Vector3D, Vector3D>(), py::arg("a"), py::arg("b"), py::arg("c"))
+      .def("get", &Matrix3D::get);
 }
-
-PYBIND11_MODULE(vector3D, m) {
-  m.doc() = "A Vector3D for use with TinyMath";
-
-  py::class_<Vector3D>(m, "Vector3D")
-            .def("x", &Vector3D::x)
-            .def("y", &Vector3D::y)
-            .def("z", &Vector3D::z) ;
-}
-
-
-
-
-
-
-
 
 #endif
