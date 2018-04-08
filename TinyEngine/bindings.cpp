@@ -127,7 +127,6 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
   	}
 
 
-
     // If initialization did not work, then print out a list of errors in the constructor.
     if(!success){
         errorStream << "SDLGraphicsProgram::SDLGraphicsProgram - Failed to initialize!\n";
@@ -176,11 +175,9 @@ void SDLGraphicsProgram::flip(){
     SDL_RenderPresent(gRenderer);
 }
 
-
 void SDLGraphicsProgram::delay(int milliseconds){
     SDL_Delay(milliseconds);
 }
-
 
 //Loops forever!
 void SDLGraphicsProgram::loop(){
@@ -211,12 +208,10 @@ void SDLGraphicsProgram::loop(){
     SDL_StopTextInput();
 }
 
-
 // Get Pointer to Window
 SDL_Window* SDLGraphicsProgram::getSDLWindow(){
   return gWindow;
 }
-
 
 // Okay, render our rectangles!
 void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
@@ -229,7 +224,7 @@ void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
 }
 
 void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
-    SDL_SetRenderDrawColor(gRenderer, a, r, g, b);
+    SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
@@ -317,7 +312,7 @@ namespace py = pybind11;
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(tinyengine, m){
+PYBIND11_MODULE(mygameengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")

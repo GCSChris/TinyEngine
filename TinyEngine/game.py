@@ -10,7 +10,7 @@
 # You will see `python3.5-config --includes` for example which corresponds
 # to which version of python you are building.
 # (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
-import tinyengine
+import mygameengine
 
 # Now use some python libraries for random numbers!
 import random
@@ -27,6 +27,7 @@ class Paddle:
         self.y = MAX_SIZE//2 - self.h//2
 
     def draw(self):
+        engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
 
     def move(self, up):
@@ -56,6 +57,7 @@ class Ball:
         self.dy = (random.randint(1,2) * 2 - 3)
 
     def draw(self):
+        engine.SetColor(255, 0, 0, 255);
         engine.DrawRectangle(self.x,self.y,self.size,self.size,True);
 
     def tick(self):
