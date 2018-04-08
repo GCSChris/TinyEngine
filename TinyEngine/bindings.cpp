@@ -27,6 +27,8 @@
 #include <string>
 #include <ResourceManager.h>
 
+#include "SFXManager.h"
+#include "UIManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
 class SDLGraphicsProgram{
@@ -66,9 +68,13 @@ public:
     void SetMusicVolume(int volume);
     // Gets the music volume
     int GetMusicVolume();
+
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+    void SetTextColor(int r, int g, int b, int a);
 
+    // Should be call at the end of each game loop. Used for frame limiting
+    void ApplyFrameCap();
     // Sets the framerate to cap at the given frames per second
     void SetFramerate(int fps);
     // returns if the given rectangles overlap
@@ -81,11 +87,19 @@ private:
     int screenHeight;
     int screenWidth;
     // The window we'll be rendering to
-    SDL_Window* gWindow ;
+    SDL_Window* gWindow;
     // Our renderer
     SDL_Renderer* gRenderer;
 
+    // the frame count at the beginning of the game loop
+    int frameTickCount = 0;
+    // The current game framerate
+    int framerate = 60;
+
+    // The state of the keys
     static std::map<std::string, int> keymap;
+
+    SDL_Color textColor = { 255, 255, 255, 255 };
 };
 
 
@@ -125,7 +139,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
         }
   	}
 
-
+    TTF_Init(); //TODO
 
     // If initialization did not work, then print out a list of errors in the constructor.
     if(!success){
@@ -251,12 +265,17 @@ void SDLGraphicsProgram::PlayMusic(std::string) {
 
 // todo
 bool SDLGraphicsProgram::ToggleMusic() {
-
+  SFXManager::instance().toggleMusic();
+  return (Mix_PlayingMusic() != 0);
 }
 
 // todo
 void SDLGraphicsProgram::PlaySFX(std::string path) {
+<<<<<<< HEAD
 
+=======
+  SFXManager::instance().playSFX(path);
+>>>>>>> master
 }
 
 // todo
@@ -269,30 +288,129 @@ int SDLGraphicsProgram::GetMusicVolume() {
 
 }
 
+<<<<<<< HEAD
 // todo
-void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+=======
+void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
+  textColor = { r, g, b, a };
+  // UIManager::instance().SetTextColor(textColor);
+}
 
+>>>>>>> master
+void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+  // SDL_Color textColor = { 255, 255, 255, 255 };
+  UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
+}
+
+void SDLGraphicsProgram::ApplyFrameCap() {
+  int tickCount = SDL_GetTicks();
+  int delayTime = 1000 / framerate - (tickCount - frameTickCount);
+  if (delayTime > 0) {
+    SDL_Delay(delayTime);
+  }
+  frameTickCount = tickCount;
 }
 
 // todo
 void SDLGraphicsProgram::SetFramerate(int fps) {
-
+  framerate = fps;
 }
 
 // todo
 bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+  SDL_Rect r1 = {x1, y1, w1, h1};
+  SDL_Rect r2 = {x2, y2, w2, h2};
 
+  return (SDL_HasIntersection(&r1, &r2));
 }
 
 // todo
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
 {
     std::map<std::string, int> binds;
+    binds["esc"] = SDLK_ESCAPE;
+    binds["f1"] = SDLK_F1;
+    binds["f2"] = SDLK_F2;
+    binds["f3"] = SDLK_F3;
+    binds["f4"] = SDLK_F4;
+    binds["f5"] = SDLK_F5;
+    binds["f6"] = SDLK_F6;
+    binds["f7"] = SDLK_F7;
+    binds["f8"] = SDLK_F8;
+    binds["f9"] = SDLK_F9;
+    binds["f10"] = SDLK_F10;
+    binds["f11"] = SDLK_F11;
+    binds["f12"] = SDLK_F12;
+    binds["delete"] = SDLK_DELETE;
+    binds["home"] = SDLK_HOME;
+
+    binds["`"] = SDLK_BACKQUOTE;
+    binds["1"] = SDLK_1;
+    binds["2"] = SDLK_2;
+    binds["3"] = SDLK_3;
+    binds["4"] = SDLK_4;
+    binds["5"] = SDLK_5;
+    binds["6"] = SDLK_6;
+    binds["7"] = SDLK_7;
+    binds["8"] = SDLK_8;
+    binds["9"] = SDLK_9;
+    binds["0"] = SDLK_0;
+    binds["-"] = SDLK_MINUS;
+    binds["="] = SDLK_EQUALS;
+    binds["back"] = SDLK_BACKSPACE;
+
+    binds["tab"] = SDLK_TAB;
     binds["q"] = SDLK_q;
     binds["w"] = SDLK_w;
+    binds["e"] = SDLK_e;
+    binds["r"] = SDLK_r;
+    binds["t"] = SDLK_t;
+    binds["y"] = SDLK_y;
+    binds["u"] = SDLK_u;
+    binds["i"] = SDLK_i;
+    binds["o"] = SDLK_o;
+    binds["p"] = SDLK_p;
+    binds["["] = SDLK_LEFTBRACKET;
+    binds["]"] = SDLK_RIGHTBRACKET;
+    binds["\\"] = SDLK_BACKSLASH;
+
+    binds["capslock"] = SDLK_CAPSLOCK;
+    binds["a"] = SDLK_a;
     binds["s"] = SDLK_s;
+    binds["d"] = SDLK_d;
+    binds["f"] = SDLK_f;
+    binds["g"] = SDLK_g;
+    binds["h"] = SDLK_h;
+    binds["j"] = SDLK_j;
+    binds["k"] = SDLK_k;
+    binds["l"] = SDLK_l;
+    binds[";"] = SDLK_SEMICOLON;
+    binds["'"] = SDLK_QUOTE;
+    binds["return"] = SDLK_RETURN;
+
+    binds["l_shift"] = SDLK_LSHIFT;
+    binds["z"] = SDLK_z;
+    binds["x"] = SDLK_x;
+    binds["c"] = SDLK_c;
+    binds["v"] = SDLK_v;
+    binds["b"] = SDLK_b;
+    binds["n"] = SDLK_n;
+    binds["m"] = SDLK_m;
+    binds[","] = SDLK_COMMA;
+    binds["."] = SDLK_PERIOD;
+    binds["/"] = SDLK_SLASH;
+    binds["r_shift"] = SDLK_RSHIFT;
+
+    binds["l_ctrl"] = SDLK_LCTRL;
+    binds["l_alt"] = SDLK_LALT;
+    binds["space"] = SDLK_SPACE;
+    binds["r_alt"] = SDLK_RALT;
+    binds["r_ctrl"] = SDLK_RCTRL;
     binds["up"] = SDLK_UP;
     binds["down"] = SDLK_DOWN;
+    binds["left"] = SDLK_LEFT;
+    binds["right"] = SDLK_RIGHT;
+
     return binds;
 }();
 
@@ -336,25 +454,29 @@ PYBIND11_MODULE(tinyengine, m){
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
             .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
             .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
-            .def("delay", &SDLGraphicsProgram::delay)
             .def("flip", &SDLGraphicsProgram::flip)
-            .def("loop", &SDLGraphicsProgram::loop)
+            .def("delay", &SDLGraphicsProgram::delay)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
+<<<<<<< HEAD
             .def("DrawImage", &SDLGraphicsProgram::DrawImage)
             .def("SetColor", &SDLGraphicsProgram::SetColor) ;
+=======
+            .def("SetColor", &SDLGraphicsProgram::SetColor)
+            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
+            .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
+            .def("ToggleMusic", &SDLGraphicsProgram::ToggleMusic)
+            .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
+            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume)
+            .def("RenderText", &SDLGraphicsProgram::RenderText)
+            .def("FrameRateDelay", &SDLGraphicsProgram::ApplyFrameCap)
+            .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
+            .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
+            .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
+    ;
+>>>>>>> master
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
-
-
-
-
-
-
-
-
-
-
 
 #endif

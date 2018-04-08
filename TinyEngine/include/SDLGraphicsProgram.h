@@ -52,7 +52,7 @@ private:
     int screenHeight;
     int screenWidth;
     // The window we'll be rendering to
-    SDL_Window* gWindow ;
+    SDL_Window* gWindow;
     // OpenGL context
     SDL_GLContext gContext;
 };

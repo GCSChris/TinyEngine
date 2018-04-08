@@ -27,6 +27,7 @@ class Paddle:
         self.y = MAX_SIZE//2 - self.h//2
 
     def draw(self):
+        engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
 
     def move(self, up):
@@ -41,9 +42,8 @@ class Paddle:
             self.y = 0
 
     def bounce(self, ball):
-        if self.y + self.h < ball.y or self.y > ball.y + ball.size or self.x + self.w < ball.x or self.x > ball.x + ball.size :
-            return
-        ball.dx*=-1
+        if (engine.RectIntersect(self.x, self.y, self.w, self.h, ball.x, ball.y, ball.size, ball.size)):
+            ball.dx*=-1
 
 
 class Ball:
@@ -83,7 +83,10 @@ p1 = Paddle(20)
 p2 = Paddle(370)
 ball = Ball()
 
+engine.PlayMusic("music.wav");
+
 print("Setting up game loop")
+engine.SetFramerate(90);
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
@@ -92,16 +95,21 @@ while not engine.pressed("q") :
     p2.bounce(ball)
     ball.tick()
 
-    if engine.pressed("w") or engine.pressed("s"):
-        p1.move(engine.pressed("w"))
-    if engine.pressed("up") or engine.pressed("down"):
-        p2.move(engine.pressed("up"))
+    if engine.pressed("space"):
+        engine.PlaySFX("break.wav");
+    if engine.pressed("tab") or engine.pressed("l_shift"):
+        p1.move(engine.pressed("tab"))
+    if engine.pressed("i") or engine.pressed("k"):
+        p2.move(engine.pressed("i"))
+
+    engine.SetTextColor(255, 0, 0, 255);
+    engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
 
     p1.draw()
     p2.draw()
     ball.draw()
 
     # Add a little delay
-    engine.delay(8);
+    engine.FrameRateDelay();
     # Refresh the screen
     engine.flip();
