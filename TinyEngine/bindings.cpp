@@ -69,8 +69,10 @@ public:
     void SetMusicVolume(int volume);
     // Gets the music volume
     int GetMusicVolume();
+
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+    void SetTextColor(int r, int g, int b, int a);
 
     // Should be call at the end of each game loop. Used for frame limiting
     void ApplyFrameCap();
@@ -97,6 +99,8 @@ private:
 
     // The state of the keys
     static std::map<std::string, int> keymap;
+
+    SDL_Color textColor = { 255, 255, 255, 255 };
 };
 
 
@@ -272,13 +276,13 @@ int SDLGraphicsProgram::GetMusicVolume() {
   SFXManager::instance().getMusicVolume();
 }
 
-// void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
-  // SDL_Color textColor = { r, g, b, a };
+void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
+  textColor = { r, g, b, a };
   // UIManager::instance().SetTextColor(textColor);
-// }
+}
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
-  SDL_Color textColor = { 255, 255, 255, 255 };
+  // SDL_Color textColor = { 255, 255, 255, 255 };
   UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
@@ -445,19 +449,10 @@ PYBIND11_MODULE(mygameengine, m){
             .def("FrameRateDelay", &SDLGraphicsProgram::ApplyFrameCap)
             .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
             .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
+            .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
     ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
-
-
-
-
-
-
-
-
-
-
 
 #endif
