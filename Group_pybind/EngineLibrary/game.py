@@ -10,7 +10,7 @@
 # You will see `python3.5-config --includes` for example which corresponds
 # to which version of python you are building.
 # (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
-import mygameengine
+import tinyengine
 
 # Now use some python libraries for random numbers!
 import random
@@ -28,7 +28,7 @@ class Paddle:
 
     def draw(self):
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
-    
+
     def move(self, up):
         change = 2
         if up:
@@ -44,7 +44,7 @@ class Paddle:
         if self.y + self.h < ball.y or self.y > ball.y + ball.size or self.x + self.w < ball.x or self.x > ball.x + ball.size :
             return
         ball.dx*=-1
-            
+
 
 class Ball:
     size = 10
@@ -86,7 +86,7 @@ print("Setting up game loop")
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
-    
+
     p1.bounce(ball)
     p2.bounce(ball)
     ball.tick()
@@ -95,7 +95,7 @@ while not engine.pressed("q") :
         p1.move(engine.pressed("w"))
     if engine.pressed("up") or engine.pressed("down"):
         p2.move(engine.pressed("up"))
-    
+
     p1.draw()
     p2.draw()
     ball.draw()
@@ -104,4 +104,3 @@ while not engine.pressed("q") :
     engine.delay(8);
     # Refresh the screen
     engine.flip();
-

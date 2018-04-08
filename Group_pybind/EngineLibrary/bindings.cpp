@@ -51,6 +51,29 @@ public:
     SDL_Window* getSDLWindow();
     // Draw a simple rectangle
     void DrawRectangle(int x, int y, int w, int h, bool fill);
+    // Sets the color for the Renderer
+    void SetColor(int r, int g, int b, int a);
+    // Draws given image as a 2D sprite
+    void DrawImage(std::string imgPath, int x, int y, int w, int h);
+    // Draws the given frame in a sprite sheet
+    void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
+    // Plays music from the given resource name_
+    void PlayMusic(std::string);
+    // Toggles if the music is being played, returning if the music is playing after
+    bool ToggleMusic();
+    // Plays the sound effect at the given path
+    void PlaySFX(std::string path);
+    // Sets the volume of the music
+    void SetMusicVolume(int volume);
+    // Gets the music volume
+    int GetMusicVolume();
+    // Renders the given text
+    void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+
+    // Sets the framerate to cap at the given frames per second
+    void SetFramerate(int fps);
+    // returns if the given rectangles overlap
+    bool RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
     //check if the given key is pressed
     bool pressed(std::string key);
 
@@ -103,8 +126,8 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
         }
   	}
 
-    
-    
+
+
     // If initialization did not work, then print out a list of errors in the constructor.
     if(!success){
         errorStream << "SDLGraphicsProgram::SDLGraphicsProgram - Failed to initialize!\n";
@@ -143,7 +166,7 @@ bool SDLGraphicsProgram::initGL(){
 void SDLGraphicsProgram::clear(){
 	// Nothing yet!
     SDL_SetRenderDrawColor(gRenderer, 0x44,0x44,0x4,0xFF);
-    SDL_RenderClear(gRenderer);   
+    SDL_RenderClear(gRenderer);
 }
 // Flip
 // The flip function gets called once per loop
@@ -155,7 +178,7 @@ void SDLGraphicsProgram::flip(){
 
 
 void SDLGraphicsProgram::delay(int milliseconds){
-    SDL_Delay(milliseconds); 
+    SDL_Delay(milliseconds);
 }
 
 
@@ -198,14 +221,56 @@ SDL_Window* SDLGraphicsProgram::getSDLWindow(){
 // Okay, render our rectangles!
 void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
     SDL_Rect fillRect = {x,y,w,h};
-    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
     if (fill) {
         SDL_RenderFillRect(gRenderer, &fillRect);
     } else {
         SDL_RenderDrawRect(gRenderer, &fillRect);
-    } 
+    }
 }
 
+void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
+    SDL_SetRenderDrawColor(gRenderer, a, r, g, b);
+}
+
+void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
+
+}
+
+void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
+
+}
+
+void SDLGraphicsProgram::PlayMusic(std::string) {
+
+}
+
+bool SDLGraphicsProgram::ToggleMusic() {
+
+}
+
+void SDLGraphicsProgram::PlaySFX(std::string path) {
+
+}
+
+void SDLGraphicsProgram::SetMusicVolume(int volume) {
+
+}
+
+int SDLGraphicsProgram::GetMusicVolume() {
+
+}
+
+void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+
+}
+
+void SDLGraphicsProgram::SetFramerate(int fps) {
+
+}
+
+bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+
+}
 
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
 {
@@ -252,19 +317,20 @@ namespace py = pybind11;
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(mygameengine, m){
-    m.doc() = "our game engine as a library"; // Optional docstring
+PYBIND11_MODULE(tinyengine, m){
+    m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
             .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
             .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
-            .def("delay", &SDLGraphicsProgram::delay) 
-            .def("flip", &SDLGraphicsProgram::flip) 
-            .def("loop", &SDLGraphicsProgram::loop) 
+            .def("delay", &SDLGraphicsProgram::delay)
+            .def("flip", &SDLGraphicsProgram::flip)
+            .def("loop", &SDLGraphicsProgram::loop)
             .def("pressed", &SDLGraphicsProgram::pressed)
-            .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle) ;
+            .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
+            .def("SetColor", &SDLGraphicsProgram::SetColor) ;
 // We do not need to expose everything to our users!
-//            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference) 
+//            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
 
 
