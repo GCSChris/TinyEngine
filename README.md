@@ -66,6 +66,7 @@ MVP
 Stretch Goals
 - Basic physics library module (to handle things like forces)
 - User can provide a sprite sheet and frame rate, and then the library will automatically animate the sprite when rendered
+- Mouse input supported (On click, on drag, etc.)
 
 
 ## Requirements (For either option)
