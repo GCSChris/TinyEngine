@@ -11,6 +11,7 @@
 # to which version of python you are building.
 # (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
 import tinyengine
+import tinymath
 
 # Now use some python libraries for random numbers!
 import random
