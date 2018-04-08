@@ -25,6 +25,8 @@
 #include <vector>
 #include <map>
 #include <string>
+
+#include "SFXManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
 //
@@ -240,7 +242,8 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int
 
 }
 
-void SDLGraphicsProgram::PlayMusic(std::string) {
+void SDLGraphicsProgram::PlayMusic(std::string path) {
+  SFXManager::instance().playMusic(string);
 
 }
 
@@ -249,15 +252,15 @@ bool SDLGraphicsProgram::ToggleMusic() {
 }
 
 void SDLGraphicsProgram::PlaySFX(std::string path) {
-
+  SFXManager::instance().playMusic(path);
 }
 
 void SDLGraphicsProgram::SetMusicVolume(int volume) {
-
+  SFXManager::instance().setMusicVolume(volume);
 }
 
 int SDLGraphicsProgram::GetMusicVolume() {
-
+  SFXManager::instance().getMusicVolume();
 }
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
