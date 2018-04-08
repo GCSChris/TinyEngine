@@ -9,11 +9,10 @@
 // This gives an example of how a programmer
 // may support multiple platforms with different
 // dependencies.
-#if defined(LINUX) || defined(MINGW)
-    #include <SDL2/SDL.h>
-#else // This works for Mac
-    #include <SDL.h>
-#endif
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 
 // The glad library helps setup OpenGL extensions.
 #include <glad/glad.h>
@@ -167,10 +166,10 @@ void SDLGraphicsProgram::render(){
     // Setup our OpenGL State machine
     // TODO: Read this
     // The below command is new!
-    // What we are doing, is telling opengl to create a depth(or Z-buffer) 
+    // What we are doing, is telling opengl to create a depth(or Z-buffer)
     // for us that is stored every frame.
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D); 
+    glEnable(GL_TEXTURE_2D);
     // This is the background of the screen.
     glViewport(0, 0, screenWidth, screenHeight);
     glClearColor( 0.2f, 0.2f, 0.2f, 1.f );
@@ -182,7 +181,7 @@ void SDLGraphicsProgram::render(){
   	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     // Delay to slow things down just a bit!
-    SDL_Delay(50); 
+    SDL_Delay(50);
 }
 
 
@@ -256,10 +255,10 @@ PYBIND11_MODULE(mymodule, m){
             .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
             .def("initGL", &SDLGraphicsProgram::initGL)      // Expose member methods
             .def("update", &SDLGraphicsProgram::update)
-            .def("render", &SDLGraphicsProgram::render) 
-            .def("loop", &SDLGraphicsProgram::loop) 
-            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference) 
-            .def("getOpenGLVersionInfo", &SDLGraphicsProgram::getOpenGLVersionInfo); 
+            .def("render", &SDLGraphicsProgram::render)
+            .def("loop", &SDLGraphicsProgram::loop)
+            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
+            .def("getOpenGLVersionInfo", &SDLGraphicsProgram::getOpenGLVersionInfo);
 }
 
 

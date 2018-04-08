@@ -9,11 +9,10 @@
 // This gives an example of how a programmer
 // may support multiple platforms with different
 // dependencies.
-#if defined(LINUX) || defined(MINGW)
-    #include <SDL2/SDL.h>
-#else // This works for Mac
-    #include <SDL.h>
-#endif
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 
 // The glad library helps setup OpenGL extensions.
 #include <glad/glad.h>
@@ -25,6 +24,8 @@
 #include <vector>
 #include <map>
 #include <string>
+
+#include "SFXManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
 //
@@ -58,7 +59,7 @@ public:
     // Draws the given frame in a sprite sheet
     void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
     // Plays music from the given resource name_
-    void PlayMusic(std::string);
+    void PlayMusic(std::string path);
     // Toggles if the music is being played, returning if the music is playing after
     bool ToggleMusic();
     // Plays the sound effect at the given path
@@ -240,24 +241,26 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int
 
 }
 
-void SDLGraphicsProgram::PlayMusic(std::string) {
+void SDLGraphicsProgram::PlayMusic(std::string path) {
+  SFXManager::instance().playMusic(path);
 
 }
 
 bool SDLGraphicsProgram::ToggleMusic() {
-
+  SFXManager::instance().toggleMusic();
+  return (Mix_PlayingMusic() != 0);
 }
 
 void SDLGraphicsProgram::PlaySFX(std::string path) {
-
+  SFXManager::instance().playSFX(path);
 }
 
 void SDLGraphicsProgram::SetMusicVolume(int volume) {
-
+  SFXManager::instance().setMusicVolume(volume);
 }
 
 int SDLGraphicsProgram::GetMusicVolume() {
-
+  SFXManager::instance().getMusicVolume();
 }
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
@@ -317,7 +320,7 @@ namespace py = pybind11;
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(tinyengine, m){
+PYBIND11_MODULE(mygameengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
@@ -328,7 +331,12 @@ PYBIND11_MODULE(tinyengine, m){
             .def("loop", &SDLGraphicsProgram::loop)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
-            .def("SetColor", &SDLGraphicsProgram::SetColor) ;
+            .def("SetColor", &SDLGraphicsProgram::SetColor)
+            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
+            .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
+            .def("ToggleMusic", &SDLGraphicsProgram::ToggleMusic)
+            .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
+            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume) ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
 }
