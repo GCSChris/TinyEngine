@@ -278,11 +278,89 @@ bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, i
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
 {
     std::map<std::string, int> binds;
+    binds["esc"] = SDLK_ESCAPE;
+    binds["f1"] = SDLK_F1;
+    binds["f2"] = SDLK_F2;
+    binds["f3"] = SDLK_F3;
+    binds["f4"] = SDLK_F4;
+    binds["f5"] = SDLK_F5;
+    binds["f6"] = SDLK_F6;
+    binds["f7"] = SDLK_F7;
+    binds["f8"] = SDLK_F8;
+    binds["f9"] = SDLK_F9;
+    binds["f10"] = SDLK_F10;
+    binds["f11"] = SDLK_F11;
+    binds["f12"] = SDLK_F12;
+    binds["delete"] = SDLK_DELETE;
+    binds["home"] = SDLK_HOME;
+
+    binds["`"] = SDLK_BACKQUOTE;
+    binds["1"] = SDLK_1;
+    binds["2"] = SDLK_2;
+    binds["3"] = SDLK_3;
+    binds["4"] = SDLK_4;
+    binds["5"] = SDLK_5;
+    binds["6"] = SDLK_6;
+    binds["7"] = SDLK_7;
+    binds["8"] = SDLK_8;
+    binds["9"] = SDLK_9;
+    binds["0"] = SDLK_0;
+    binds["-"] = SDLK_MINUS;
+    binds["="] = SDLK_EQUALS;
+    binds["back"] = SDLK_BACKSPACE;
+
+    binds["tab"] = SDLK_TAB;
     binds["q"] = SDLK_q;
     binds["w"] = SDLK_w;
+    binds["e"] = SDLK_e;
+    binds["r"] = SDLK_r;
+    binds["t"] = SDLK_t;
+    binds["y"] = SDLK_y;
+    binds["u"] = SDLK_u;
+    binds["i"] = SDLK_i;
+    binds["o"] = SDLK_o;
+    binds["p"] = SDLK_p;
+    binds["["] = SDLK_LEFTBRACKET;
+    binds["]"] = SDLK_RIGHTBRACKET;
+    binds["\\"] = SDLK_BACKSLASH;
+
+    binds["capslock"] = SDLK_CAPSLOCK;
+    binds["a"] = SDLK_a;
     binds["s"] = SDLK_s;
+    binds["d"] = SDLK_d;
+    binds["f"] = SDLK_f;
+    binds["g"] = SDLK_g;
+    binds["h"] = SDLK_h;
+    binds["j"] = SDLK_j;
+    binds["k"] = SDLK_k;
+    binds["l"] = SDLK_l;
+    binds[";"] = SDLK_SEMICOLON;
+    binds["'"] = SDLK_QUOTE;
+    binds["return"] = SDLK_RETURN;
+
+    binds["l_shift"] = SDLK_LSHIFT;
+    binds["z"] = SDLK_z;
+    binds["x"] = SDLK_x;
+    binds["c"] = SDLK_c;
+    binds["v"] = SDLK_v;
+    binds["b"] = SDLK_b;
+    binds["n"] = SDLK_n;
+    binds["m"] = SDLK_m;
+    binds[","] = SDLK_COMMA;
+    binds["."] = SDLK_PERIOD;
+    binds["/"] = SDLK_SLASH;
+    binds["r_shift"] = SDLK_RSHIFT;
+
+    binds["l_ctrl"] = SDLK_LCTRL;
+    binds["l_alt"] = SDLK_LALT;
+    binds["space"] = SDLK_SPACE;
+    binds["r_alt"] = SDLK_RALT;
+    binds["r_ctrl"] = SDLK_RCTRL;
     binds["up"] = SDLK_UP;
     binds["down"] = SDLK_DOWN;
+    binds["left"] = SDLK_LEFT;
+    binds["right"] = SDLK_RIGHT;
+
     return binds;
 }();
 
