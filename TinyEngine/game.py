@@ -28,7 +28,8 @@ class Paddle:
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
-        engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
+        # engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
+        engine.DrawImage("doesntmatter", 0, 0, 0, 0);
 
     def move(self, up):
         change = 2

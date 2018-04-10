@@ -247,7 +247,9 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-
+  std::string bananaString = "battery.png";
+  SDL_Texture* texture = ResourceManager::instance().getTexture(bananaString, gRenderer);
+  SDL_RenderCopy(gRenderer, texture, NULL, NULL); //TODO dest rectangle
 }
 
 void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
@@ -439,6 +441,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("delay", &SDLGraphicsProgram::delay)
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
+            .def("DrawImage", &SDLGraphicsProgram::DrawImage)
             .def("SetColor", &SDLGraphicsProgram::SetColor)
             .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
             .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
