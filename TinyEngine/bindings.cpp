@@ -122,13 +122,13 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 		success = false;
 	}
 	else{
-	    //Create window
-    	gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+    //Create window
+    gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
-        // Check if Window did not create.
-        if( gWindow == NULL ){
-			errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
-			success = false;
+    // Check if Window did not create.
+    if( gWindow == NULL ){
+		  errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
+	    success = false;
 		}
 
 		//Create a Renderer to draw on
@@ -247,9 +247,14 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-  std::string bananaString = "battery.png";
-  SDL_Texture* texture = ResourceManager::instance().getTexture(bananaString, gRenderer);
-  SDL_RenderCopy(gRenderer, texture, NULL, NULL); //TODO dest rectangle
+  // std::string batteryString = "battery.png";
+  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+
+  // int srcRectWidth = (curAnimationFrame % numAnimationFrames) * w;
+	// int srcRectHeight = (curAnimationFrame / numAnimationFrames) * h;
+  // SDL_Rect src = { srcRectWidth, srcRectHeight, w, h };
+	SDL_Rect dest = { x, y, w, h };
+  SDL_RenderCopy(gRenderer, texture, NULL, &dest); //TODO dest rectangle
 }
 
 void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
