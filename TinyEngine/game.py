@@ -30,6 +30,7 @@ class Paddle:
         engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
 
+
     def move(self, up):
         change = 2
         if up:
@@ -108,6 +109,7 @@ while not engine.pressed("q") :
     p1.draw()
     p2.draw()
     ball.draw()
+    engine.DrawImage("battery.png", 10, 20, 20, 15);
 
     # Add a little delay
     engine.FrameRateDelay();
