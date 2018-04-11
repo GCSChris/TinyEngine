@@ -87,7 +87,9 @@ ball = Ball()
 engine.PlayMusic("music.wav");
 
 print("Setting up game loop")
-engine.SetFramerate(90);
+FRAMERATE = 60;
+engine.SetFramerate(FRAMERATE);
+frameTick = 0;
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
@@ -104,12 +106,19 @@ while not engine.pressed("q") :
         p2.move(engine.pressed("i"))
 
     engine.SetTextColor(255, 0, 0, 255);
-    engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100)
+    engine.RenderText("Hello World!", "arial.ttf", 32, 100, 100);
 
     p1.draw()
     p2.draw()
     ball.draw()
-    engine.DrawImage("battery.png", 10, 20, 20, 15);
+
+    engine.DrawFrame("tiger_walk.png", frameTick, FRAMERATE, 4, 10, 10, 16, 32);
+
+    frameTick = (frameTick + 1);
+    if (frameTick >= FRAMERATE):
+        frameTick = 0;
+
+    print(frameTick);
 
     # Add a little delay
     engine.FrameRateDelay();

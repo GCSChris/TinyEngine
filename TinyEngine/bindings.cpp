@@ -58,7 +58,8 @@ public:
     // Draws given image as a 2D sprite
     void DrawImage(std::string imgPath, int x, int y, int w, int h);
     // Draws the given frame in a sprite sheet
-    void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
+    void DrawFrame(std::string imgPath, int frameTick, int gameFrameRate, int spriteNumFrames,
+        int x, int y, int frameWidth, int frameHeight);
     // Plays music from the given resource name_
     void PlayMusic(std::string path);
     // Toggles if the music is being played, returning if the music is playing after
@@ -247,23 +248,49 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-  // std::string batteryString = "battery.png";
   SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
-  // int srcRectWidth = (curAnimationFrame % numAnimationFrames) * w;
-	// int srcRectHeight = (curAnimationFrame / numAnimationFrames) * h;
-  // SDL_Rect src = { srcRectWidth, srcRectHeight, w, h };
 	SDL_Rect dest = { x, y, w, h };
-  SDL_RenderCopy(gRenderer, texture, NULL, &dest); //TODO dest rectangle
+
+  SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
-void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
+/*
+void SDLGraphicsProgram::DrawFrame(std::string imgPath, int currentFrame, int x, int y, int w, int h) {
+  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
+  int frameWidth = w;
+  int frameHeight = h;
+
+  int numColumns = 4;
+  int frameRectX = (currentFrame % numColumns) * frameWidth;
+  int frameRectY = (currentFrame / numColumns) * frameHeight;
+  SDL_Rect src = { frameRectX, frameRectY, w, h };
+  SDL_Rect dest = { x, y, w, h };
+  SDL_RenderCopy(gRenderer, texture, &src, &dest);
+}
+*/
+
+void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int gameFrameRate, int spriteNumFrames,
+    int x, int y, int frameWidth, int frameHeight) {
+
+  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+
+  // [0, 15) -> 0
+  // [15, 30) -> 1
+  // [30, 45) -> 2
+  int currentFrame = frameTick / (gameFrameRate / spriteNumFrames);
+
+  int numColumns = 4;
+  int frameRectX = (currentFrame % numColumns) * frameWidth;
+  int frameRectY = (currentFrame / numColumns) * frameHeight;
+  SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
+  SDL_Rect dest = { x, y, frameWidth, frameHeight };
+  SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 
 void SDLGraphicsProgram::PlayMusic(std::string path) {
   SFXManager::instance().playMusic(path);
-
 }
 
 bool SDLGraphicsProgram::ToggleMusic() {
@@ -447,6 +474,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
             .def("DrawImage", &SDLGraphicsProgram::DrawImage)
+            .def("DrawFrame", &SDLGraphicsProgram::DrawFrame)
             .def("SetColor", &SDLGraphicsProgram::SetColor)
             .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
             .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
