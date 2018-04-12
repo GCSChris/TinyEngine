@@ -15,8 +15,10 @@ import mygameengine
 # Now use some python libraries for random numbers!
 import random
 
-MAX_SIZE = 400
+MAX_SIZE = 1000
 engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
+
+
 
 class Paddle:
     w = 10
@@ -29,7 +31,6 @@ class Paddle:
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
-
 
     def move(self, up):
         change = 2
@@ -90,6 +91,17 @@ print("Setting up game loop")
 FRAMERATE = 60;
 engine.SetFramerate(FRAMERATE);
 frameTick = 0;
+
+def endGameLoop(frameTick):
+    # Add a little delay
+    engine.FrameRateDelay();
+
+    frameTick = (frameTick + 1);
+    if (frameTick >= FRAMERATE):
+        frameTick = 0;
+
+    return frameTick;
+
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
@@ -112,15 +124,10 @@ while not engine.pressed("q") :
     p2.draw()
     ball.draw()
 
-    engine.DrawFrame("tiger_walk.png", frameTick, FRAMERATE, 4, 10, 10, 16, 32);
+    # engine.DrawFrame("tiger_walk.png", frameTick, 4, 10, 10, 16, 32);
+    engine.DrawFrame("braid.png", frameTick, 27, 100, 100, 130, 150);
 
-    frameTick = (frameTick + 1);
-    if (frameTick >= FRAMERATE):
-        frameTick = 0;
+    frameTick = endGameLoop(frameTick);
 
-    print(frameTick);
-
-    # Add a little delay
-    engine.FrameRateDelay();
     # Refresh the screen
     engine.flip();

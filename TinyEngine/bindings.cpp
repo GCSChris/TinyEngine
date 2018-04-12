@@ -58,7 +58,7 @@ public:
     // Draws given image as a 2D sprite
     void DrawImage(std::string imgPath, int x, int y, int w, int h);
     // Draws the given frame in a sprite sheet
-    void DrawFrame(std::string imgPath, int frameTick, int gameFrameRate, int spriteNumFrames,
+    void DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
         int x, int y, int frameWidth, int frameHeight);
     // Plays music from the given resource name_
     void PlayMusic(std::string path);
@@ -255,33 +255,25 @@ void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int
   SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
-/*
-void SDLGraphicsProgram::DrawFrame(std::string imgPath, int currentFrame, int x, int y, int w, int h) {
-  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
-
-  int frameWidth = w;
-  int frameHeight = h;
-
-  int numColumns = 4;
-  int frameRectX = (currentFrame % numColumns) * frameWidth;
-  int frameRectY = (currentFrame / numColumns) * frameHeight;
-  SDL_Rect src = { frameRectX, frameRectY, w, h };
-  SDL_Rect dest = { x, y, w, h };
-  SDL_RenderCopy(gRenderer, texture, &src, &dest);
+static int getNumColumns(std::string fileName, int frameWidth) {
+  SDL_Point dimensions = ResourceManager::instance().getIMGDimensions(fileName);
+  int width = dimensions.x;
+  return (width / frameWidth);
 }
-*/
 
-void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int gameFrameRate, int spriteNumFrames,
+void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
     int x, int y, int frameWidth, int frameHeight) {
 
   SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
-  // [0, 15) -> 0
-  // [15, 30) -> 1
-  // [30, 45) -> 2
-  int currentFrame = frameTick / (gameFrameRate / spriteNumFrames);
+  // int currentFrame = frameTick / (framerate / spriteNumFrames);
+  int currentFrame = frameTick * spriteNumFrames / framerate;
+  if (currentFrame >= spriteNumFrames) {
+    // currentFrame = 0;
+  }
 
-  int numColumns = 4;
+  // int numColumns = getNumColumns(imgPath, frameWidth);
+  int numColumns = getNumColumns(imgPath, frameWidth);
   int frameRectX = (currentFrame % numColumns) * frameWidth;
   int frameRectY = (currentFrame / numColumns) * frameHeight;
   SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
@@ -432,7 +424,7 @@ std::map<std::string, int> SDLGraphicsProgram::keymap = []
 bool SDLGraphicsProgram::pressed(std::string key){
     static std::map<int, bool> pressed;
 
-//from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
+    // from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
     SDL_Event event;
     while( SDL_PollEvent(&event))
     {
