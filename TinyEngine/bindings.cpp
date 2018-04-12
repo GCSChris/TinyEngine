@@ -226,12 +226,10 @@ void SDLGraphicsProgram::loop(){
     SDL_StopTextInput();
 }
 
-
 // Get Pointer to Window
 SDL_Window* SDLGraphicsProgram::getSDLWindow(){
   return gWindow;
 }
-
 
 // Okay, render our rectangles!
 void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
@@ -244,7 +242,7 @@ void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
 }
 
 void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
-    SDL_SetRenderDrawColor(gRenderer, a, r, g, b);
+    SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
@@ -266,13 +264,8 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int sprit
 
   SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
-  // int currentFrame = frameTick / (framerate / spriteNumFrames);
   int currentFrame = frameTick * spriteNumFrames / framerate;
-  if (currentFrame >= spriteNumFrames) {
-    // currentFrame = 0;
-  }
 
-  // int numColumns = getNumColumns(imgPath, frameWidth);
   int numColumns = getNumColumns(imgPath, frameWidth);
   int frameRectX = (currentFrame % numColumns) * frameWidth;
   int frameRectY = (currentFrame / numColumns) * frameHeight;
@@ -304,11 +297,9 @@ int SDLGraphicsProgram::GetMusicVolume() {
 
 void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
   textColor = { r, g, b, a };
-  // UIManager::instance().SetTextColor(textColor);
 }
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
-  // SDL_Color textColor = { 255, 255, 255, 255 };
   UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
