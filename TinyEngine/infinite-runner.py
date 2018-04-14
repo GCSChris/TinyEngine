@@ -2,20 +2,21 @@ import mygameengine
 
 import random
 
-MAX_SIZE = 600
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE, MAX_SIZE)
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 150
+engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 class Star:
     x = 0;
     y = 0;
     w = 10
     h = 10
-    vx = -0.1;
 
     def __init__(self):
-        self.x = random.randint(MAX_SIZE, MAX_SIZE + 150);
-        self.y = random.randint(MAX_SIZE - 50, MAX_SIZE);
-        self.vx = -1;
+        self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
+        self.y = random.randint(0, SCREEN_HEIGHT - self.h);
+        self.vx = random.uniform(0.85, 1.25) * -1;
+
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
@@ -24,33 +25,43 @@ class Star:
     def update(self):
         self.x = self.x + self.vx;
         if (self.x < 0):
-            self.x = MAX_SIZE;
-            self.y = random.randint(MAX_SIZE - 50, MAX_SIZE);
+            self.x = random.randint(int(SCREEN_WIDTH * 1.5), SCREEN_WIDTH * 2);
+            self.y = random.randint(0, SCREEN_HEIGHT - self.h);
+            self.vx = random.uniform(0.6, 1.25) * -1;
 
+starQueue = [];
 
-starQueue = []
+class Rocket:
+    def draw():
+        w = 32
+        h = 64
+
+        x = SCREEN_WIDTH - w;
+        y = SCREEN_HEIGHT - h;
+        engine.DrawImage("rocket.png", int(x), int(y), int(w), int(h));
 
 class Player:
-    w = 16
+    w = 32
     h = 32
+
     vx = 0
     vy = 0
 
     def __init__(self, x):
         self.x = x
-        self.y = MAX_SIZE//2 - self.h//2
+        self.y = SCREEN_HEIGHT // 2 - self.h // 2
         self.vy = 0;
         self.usedBooster = False;
 
     def draw(self, frameTick):
-        engine.DrawFrame("tiger_walk.png", frameTick, 4, int(self.x), int(self.y), int(self.w), int(self.h));
+        engine.DrawFrame("astronaut-walk.png", frameTick, 7, int(self.x), int(self.y), int(self.w), int(self.h));
 
     def jump(self):
         self.vy -= 4;
 
     def upBooster(self):
         print("boost UP!");
-        self.vy -= 2;
+        self.vy -= 3.5;
 
     def downBooster(self):
         print("boost DOWN!");
@@ -59,13 +70,13 @@ class Player:
     def update(self):
         self.y = self.y + self.vy;
 
-        if (self.y + self.h < 600):
+        if (self.y + self.h < SCREEN_HEIGHT):
             self.vy += 0.1; # gravity
         else:
-            self.y = 600 - self.h;
+            self.y = SCREEN_HEIGHT - self.h;
             self.vy = 0;
 
-        if engine.pressed("space") and (self.y + self.h >= MAX_SIZE):
+        if engine.pressed("space") and (self.y + self.h >= SCREEN_HEIGHT):
             player.jump();
             self.usedBooster = False;
 
@@ -82,6 +93,7 @@ class Player:
         int(star.x), int(star.y), int(star.w), int(star.h))):
             print("DEAD!\n");
 
+# --------------------------
 
 player = Player(50);
 
@@ -108,17 +120,18 @@ while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
 
+    # engine.DrawImage("background.png", 0 , 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     engine.RenderText(str(score), "arial.ttf", 12, 20, 20);
 
     player.update();
     player.draw(frameTick);
 
+    Rocket.draw();
+
     for star in starQueue:
         star.update();
         star.draw();
         player.checkDie(star);
-
-    # player.checkDie(star1);
 
     if ((len(starQueue) < MAX_NUM_STARS) and (frameTick == 0 and score % 10 == 0)): # max num stars
         print("making new Star!");
