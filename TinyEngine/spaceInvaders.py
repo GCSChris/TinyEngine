@@ -18,9 +18,17 @@ engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
 class Player:
     w = 16
     h = 16
+    x = 0;
+    y = 0;
+
     def __init__(self):
-        self.x =  MAX_SIZE / 2
+        self.x =  MAX_SIZE // 2
         self.y = 32;
+
+    def draw(self):
+        # engine.SetColor(255, 255, 255, 255);
+        # engine.DrawRectangle(self.x,self.y,self.w,self.h,True);
+        engine.DrawImage("sprites/spaceInvader_player.png", self.x, self.y, self.w, self.h);
 
 
 class Enemy:
@@ -31,11 +39,15 @@ class Enemy:
 #class Projectile:
 #    def __init__(self):
 
+player = Player()
+
 print("Setting up game loop")
 engine.SetFramerate(90);
 while not engine.pressed("q") :
     # Clear the screen
     engine.clear();
+
+    player.draw();
 
     # Add a little delay
     engine.FrameRateDelay();
