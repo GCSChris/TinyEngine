@@ -29,7 +29,9 @@ class Player:
     def draw(self):
         engine.DrawImage("sprites/spaceInvader_player.png", self.x, self.y, self.w, self.h);
     
-    # def move(self, 
+    def move(self, moveAmount):
+        if (self.x + moveAmount > 0 and self.x + moveAmount + self.w < MAX_SIZE):
+            self.x = self.x + moveAmount
 
 
 class Enemy:
@@ -42,12 +44,26 @@ class Enemy:
         
     def draw(self):
         engine.DrawImage("sprites/spaceInvader.png", self.x, self.y, self.w, self.h);
+        
+    def move(self, moveAmount):
+        if (self.x + moveAmount > 0 and self.x + moveAmount + self.w < MAX_SIZE):
+            self.x = self.x + moveAmount
 
 #class Projectile:
 #    def __init__(self):
 
-
+# a 2D array of enemies 
 enemyMatrix = [[Enemy(0,0) for x in range(w)] for y in range(h)]
+
+#enemy speed
+enemySpeed = 1;
+
+#are enemies moving left?
+movingLeft = False
+
+#player speed
+playerSpeed = 2;
+
 
 for x in range(0, w):
     for y in range(0, h):
@@ -67,6 +83,11 @@ while not engine.pressed("q") :
     for x in range(0, w):
         for y in range(0, h):
             enemyMatrix[y][x].draw();
+            
+    if engine.pressed("left"):
+        player.move( 0 - playerSpeed)
+    elif engine.pressed("right"):
+        player.move(playerSpeed)
 
     player.draw();
 
