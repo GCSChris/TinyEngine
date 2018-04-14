@@ -83,7 +83,7 @@ struct Vector2D{
 
 };
 
-Dot(const Vector2D& a, const Vector2D& b){
+float Dot(const Vector2D& a, const Vector2D& b){
   float dotProd = (a[0] * b[0]) + (a[1] * b[1]);
   return dotProd;
 }
@@ -197,12 +197,15 @@ Vector2D multMatrixVector(const Matrix2D& M, const Vector2D& v){
 // Rotate a single point around another point, returning the result
 std::pair<int, int> rotatePoint(std::pair<int, int> point, const Vector2D rotPoint, int degRot) {
   // TODO rotate the given vector around the given point by degrees
+  std::cout << "rotating point: " << point.first << " " << point.second  << " by degrees: " << degRot << std::endl;
   Vector2D pointVect = Vector2D(point.first, point.second);
   Vector2D shiftedPoint = vectorSub(pointVect, rotPoint);
   float radians = degRot * 3.14159265 / 180;
-  Matrix2D matrix = Matrix2D(cos(radians), -sin(radians), sin(radians), -cos(radians));
+  Matrix2D matrix = Matrix2D(cos(radians), -sin(radians), sin(radians), cos(radians));
   Vector2D rotatedPoint = multMatrixVector(matrix, shiftedPoint);
-  return vectorAdd(rotatedPoint, rotPoint).getPair();
+  rotatedPoint = vectorAdd(rotatedPoint, rotPoint);
+  std::cout << "rotated point: " << rotatedPoint.x << " " << rotatedPoint.y << std::endl;
+  return rotatedPoint.getPair();
 }
 
 // Rotate points around another point, return the resulting list of points
@@ -217,7 +220,6 @@ std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, i
 
 // Rotates the points around their center (average point), returning the resulting list of points
 std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> points, int degRot) {
-  std::cout << "Rotating points" <<std::endl;
   float avgX = 0;
   float avgY = 0;
   int count = 0;

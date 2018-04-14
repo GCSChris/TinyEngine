@@ -24,43 +24,39 @@ def degreeToRadians(deg):
     return deg * 3.14159265 / 180
 
 class Ship:
-    basePoints = [(150, 150), (200, 200), (175, 225), (350, 200)] #[(195, 195), (200, 200), (195, 205), (210, 200)]
+    basePoints = [(195, 195), (200, 200), (195, 205), (210, 200)]
     currentPoints = [(195, 195), (200, 200), (195, 205), (210, 200)]
     center = (200, 200)
     rotation = 0 # facing right
 
     def __init__(self, rot):
         self.rotation = rot
-        #self.currentPoints = tinymath.RotatePoints(self.basePoints, self.rotation);
+        self.currentPoints = tinymath.RotatePoints(self.basePoints, self.rotation);
 
-    def getPointsList(self):
-        tailLength = 10
-        noseLength = 15
-        tailAngle = 45
-
-        tail1 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation + tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation + tailAngle))))
-        tail2 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation - tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation - tailAngle))))
-        nose = (self.center[0] + (noseLength * math.cos(degreeToRadians(self.rotation))), self.center[1] + (noseLength * math.sin(degreeToRadians(self.rotation))))
-
-        tail1 = (math.floor(tail1[0]), math.floor(tail1[1]))
-        tail2 = (math.floor(tail2[0]), math.floor(tail2[1]))
-        nose = (math.floor(nose[0]), math.floor(nose[1]))
-
-        print(tail1)
-        print(tail2)
-        print(nose)
-
-        pointsList = [tail1, self.center, tail2, nose]
-        return pointsList
+    # def getPointsList(self):
+    #     tailLength = 10
+    #     noseLength = 15
+    #     tailAngle = 45
+    #
+    #     tail1 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation + tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation + tailAngle))))
+    #     tail2 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation - tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation - tailAngle))))
+    #     nose = (self.center[0] + (noseLength * math.cos(degreeToRadians(self.rotation))), self.center[1] + (noseLength * math.sin(degreeToRadians(self.rotation))))
+    #
+    #     tail1 = (math.floor(tail1[0]), math.floor(tail1[1]))
+    #     tail2 = (math.floor(tail2[0]), math.floor(tail2[1]))
+    #     nose = (math.floor(nose[0]), math.floor(nose[1]))
+    #
+    #     pointsList = [tail1, self.center, tail2, nose]
+    #     return pointsList
 
     def rotate(self, rot):
         self.rotation += rot;
-        #self.currentPoints = tinymath.RotatePointsAround(self.basePoints, tinymath.Vector2D(190,200), self.rotation);
+        rotationVector = tinymath.Vector2D(self.currentPoints[1][0], self.currentPoints[1][1])
+        self.currentPoints = tinymath.RotatePointsAround(self.basePoints, rotationVector, self.rotation);
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255)
-        points = self.getPointsList()
-        engine.DrawLines(points, True)
+        engine.DrawLines(self.currentPoints, True)
 
 ship = Ship(0)
 
