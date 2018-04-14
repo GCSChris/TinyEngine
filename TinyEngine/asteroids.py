@@ -23,6 +23,70 @@ engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
 def degreeToRadians(deg):
     return deg * 3.14159265 / 180
 
+class Asteroid:
+    points = []
+    isActive = True
+    velocity = (0, 0)
+
+    def __init__(self, points, speed):
+        print("make asteroid UwU")
+        # TODO generate random velocity based on speed
+
+    def tick(self):
+        if self.isActive:
+            self.points = tinymath.translatePoints(self.points, tinymath.Vector2D(self.velocity[0], self.velocity[1]))
+
+    def draw(self):
+        if self.isActive:
+            engine.SDL_SetRenderDrawColor(255, 255, 255, 255)
+            engine.DrawLines(self.points, True)
+
+    def getPoints(self):
+        return self.points
+
+    def isActive(self):
+        return self.isActive
+
+    def setPoints(self, newPoints):
+        self.points = newPoints
+
+    def setActive(self, activeState):
+        self.isActive = activeState
+
+
+class Bullet:
+    angle = 0
+    magnitude = 10
+    speed = 3
+    origin = (0,0)
+
+    def __init__(self, point, rotation):
+        self.angle = rotation
+        self.origin = point
+
+    def getPoints(self):
+        rads = degreeToRadians(self.angle)
+        endX = self.magnitude * math.cos(rads) + self.origin[0]
+        endY = self.magnitude * math.sin(rads) + self.origin[1]
+        return [self.origin, (endX, endY)]
+
+    def tick(self):
+        rads = degreeToRadians(self.angle)
+        newX = self.speed * math.cos(rads) + self.origin[0]
+        newY = self.speed * math.sin(rads) + self.origin[1]
+        self.origin = (newX, newY)
+
+    def draw(self):
+        engine.SetColor(255, 255, 255, 255)
+        engine.DrawLines(self.getPoints(), False)
+
+    def checkCollisions(self, asteroids):
+        # if out of bounds
+        if (0 >= self.origin[0] or self.origin[0] >= MAX_SIZE or 0 >= self.origin[1] or self.origin[1] >= MAX_SIZE):
+            return True
+        # TODO check collision with all the asteroids in the asteroids list, if colliding, set inactive and return True
+        return False
+
 class Ship:
     basePoints = [(195, 195), (200, 200), (195, 205), (210, 200)]
     currentPoints = [(195, 195), (200, 200), (195, 205), (210, 200)]
@@ -33,22 +97,6 @@ class Ship:
         self.rotation = rot
         self.currentPoints = tinymath.RotatePoints(self.basePoints, self.rotation);
 
-    # def getPointsList(self):
-    #     tailLength = 10
-    #     noseLength = 15
-    #     tailAngle = 45
-    #
-    #     tail1 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation + tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation + tailAngle))))
-    #     tail2 = (self.center[0] - (tailLength * math.cos(degreeToRadians(self.rotation - tailAngle))), self.center[1] - (tailLength * math.sin(degreeToRadians(self.rotation - tailAngle))))
-    #     nose = (self.center[0] + (noseLength * math.cos(degreeToRadians(self.rotation))), self.center[1] + (noseLength * math.sin(degreeToRadians(self.rotation))))
-    #
-    #     tail1 = (math.floor(tail1[0]), math.floor(tail1[1]))
-    #     tail2 = (math.floor(tail2[0]), math.floor(tail2[1]))
-    #     nose = (math.floor(nose[0]), math.floor(nose[1]))
-    #
-    #     pointsList = [tail1, self.center, tail2, nose]
-    #     return pointsList
-
     def rotate(self, rot):
         self.rotation += rot;
         rotationVector = tinymath.Vector2D(self.currentPoints[1][0], self.currentPoints[1][1])
@@ -58,27 +106,68 @@ class Ship:
         engine.SetColor(255, 255, 255, 255)
         engine.DrawLines(self.currentPoints, True)
 
+    def fireBullet(self):
+        return Bullet(self.currentPoints[3], self.rotation)
+
+    def checkCollisions(self, asteroids):
+        # TODO check collisions with asteroids
+        return False
+
 ship = Ship(0)
+bullet = False
+# TODO make asteroids
+asteroids = []
+
+gameWon = False
+gameOver = False
 
 # END DEFINITIONS, GAME LOOP HERE
 
 # Music from https://opengameart.org/content/space-music-out-there
-engine.PlayMusic("resources/OutThere.wav");
+# SFX from https://opengameart.org/content/sfx-the-ultimate-2017-8-bit-mini-pack
+engine.PlayMusic("resources/OutThere.wav")
 
 engine.SetBackgroundColor(0, 0, 0, 255)
 engine.SetFramerate(30)
 while not engine.pressed("q") :
     # Clear the screen
-    engine.clear();
+    engine.clear()
 
-    ship.draw();
+    # TODO draw the asteroids
+    ship.draw()
+    if bullet:
+        bullet.draw()
 
-    if engine.pressed("a"):
-        ship.rotate(10);
-    if engine.pressed("d"):
-        ship.rotate(-10);
+    if not gameOver and not gameWon:
+        if engine.pressed("a"):
+            ship.rotate(10)
+        if engine.pressed("d"):
+            ship.rotate(-10)
+        if engine.pressed("space") and not bullet:
+            engine.PlaySFX("resources/Pew.wav")
+            bullet = ship.fireBullet()
+
+        # TODO move the asteroids
+        if bullet:
+            bullet.tick()
+            if bullet.checkCollisions(asteroids):
+                bullet = False
+
+        if ship.checkCollisions(asteroids):
+            gameOver = True
+
+        #TODO check if any asteroids still alive
+
+
+    if gameWon:
+        print("game won")
+        # TODO draw game won text
+
+    if not gameWon and gameOver:
+        print("game over")
+        # TODO draw game over text
 
     # Add a little delay
-    engine.FrameRateDelay();
+    engine.FrameRateDelay()
     # Refresh the screen
-    engine.flip();
+    engine.flip()

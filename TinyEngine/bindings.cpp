@@ -88,13 +88,13 @@ public:
     //check if the given key is pressed
     bool pressed(std::string key);
     // draws a line from point a to point b
-    void DrawLine(std::pair<int, int> a, std::pair<int, int> b);
+    void DrawLine(std::pair<float, float> a, std::pair<float, float> b);
     // draws a list of line
-    void DrawLines(std::vector<std::pair<int, int>> points, bool closed);
+    void DrawLines(std::vector<std::pair<float, float>> points, bool closed);
     // returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
-    bool LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d);
+    bool LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d);
     // determines if any two lines between the lists intersecting (a list of points determines a CLOSED  shape in order)
-    bool ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b);
+    bool ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b);
 
 private:
     // Screen dimension constants
@@ -449,21 +449,22 @@ bool SDLGraphicsProgram::pressed(std::string key){
 }
 
 // draws a line from point a to point b
-void SDLGraphicsProgram::DrawLine(std::pair<int, int> a, std::pair<int, int> b) {
+void SDLGraphicsProgram::DrawLine(std::pair<float, float> a, std::pair<float, float> b) {
     SDL_RenderDrawLine(gRenderer, a.first, a.second, b.first, b.second);
 }
+
 // draws a list of line
-void SDLGraphicsProgram::DrawLines(std::vector<std::pair<int, int>> points, bool closed) {
+void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, bool closed) {
     for (auto iter = points.begin(); iter < points.end(); iter++) {
         if (iter + 1 == points.end() && closed) {
             DrawLine(*iter, *(points.begin()));
-        } else {
+        } else if (iter + 1 != points.end()){
             DrawLine(*iter, *(iter + 1));
         }
     }
 }
 // returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
-bool SDLGraphicsProgram::LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d) {
+bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d) {
   float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
   float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
   float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
@@ -492,7 +493,7 @@ bool SDLGraphicsProgram::LineIntersect(std::pair<int, int> a, std::pair<int, int
   return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
 }
 
-bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b) {
+bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
   // TODO loop through both sets of lines points and check for any intersections
   return false;
 }

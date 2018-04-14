@@ -4,7 +4,6 @@
 #include <cmath>
 #include <vector>
 #include <map>
-#include <iostream>
 
 // Forward references of each of the structs
 struct Vector2D;
@@ -77,8 +76,8 @@ struct Vector2D{
         return (*this);
     }
 
-    std::pair<int, int> getPair() {
-      return std::pair<int, int>(x, y);
+    std::pair<float, float> getPair() {
+      return std::pair<float, float>(x, y);
     }
 
 };
@@ -195,22 +194,19 @@ Vector2D multMatrixVector(const Matrix2D& M, const Vector2D& v){
 }
 
 // Rotate a single point around another point, returning the result
-std::pair<int, int> rotatePoint(std::pair<int, int> point, const Vector2D rotPoint, int degRot) {
-  // TODO rotate the given vector around the given point by degrees
-  std::cout << "rotating point: " << point.first << " " << point.second  << " by degrees: " << degRot << std::endl;
+std::pair<float, float> rotatePoint(std::pair<float, float> point, const Vector2D rotPoint, int degRot) {
   Vector2D pointVect = Vector2D(point.first, point.second);
   Vector2D shiftedPoint = vectorSub(pointVect, rotPoint);
   float radians = degRot * 3.14159265 / 180;
   Matrix2D matrix = Matrix2D(cos(radians), -sin(radians), sin(radians), cos(radians));
   Vector2D rotatedPoint = multMatrixVector(matrix, shiftedPoint);
   rotatedPoint = vectorAdd(rotatedPoint, rotPoint);
-  std::cout << "rotated point: " << rotatedPoint.x << " " << rotatedPoint.y << std::endl;
   return rotatedPoint.getPair();
 }
 
 // Rotate points around another point, return the resulting list of points
-std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, int>> points, Vector2D rotPoint, int degRot) {
-  std::vector<std::pair<int, int>> newPoints;
+std::vector<std::pair<float, float>> rotatePointsAround(std::vector<std::pair<float, float>> points, Vector2D rotPoint, int degRot) {
+  std::vector<std::pair<float, float>> newPoints;
   for (auto it = points.begin(); it < points.end(); it++) {
     newPoints.push_back(rotatePoint(*it, rotPoint, degRot));
   }
@@ -219,7 +215,7 @@ std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, i
 }
 
 // Rotates the points around their center (average point), returning the resulting list of points
-std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> points, int degRot) {
+std::vector<std::pair<float, float>> rotatePoints(std::vector<std::pair<float, float>> points, int degRot) {
   float avgX = 0;
   float avgY = 0;
   int count = 0;
@@ -234,15 +230,15 @@ std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> p
 }
 
 
-std::pair<int, int> translatePoint(std::pair<int, int> point, Vector2D translation) {
+std::pair<float, float> translatePoint(std::pair<float, float> point, Vector2D translation) {
   Vector2D vect = Vector2D(point.first, point.second);
   vect += translation;
-  std::pair<int, int> result = vect.getPair();
+  std::pair<float, float> result = vect.getPair();
   return result;
 }
 
-std::vector<std::pair<int, int>> translatePoints(std::vector<std::pair<int, int>> points, Vector2D translation) {
-  std::vector<std::pair<int, int>> newPoints;
+std::vector<std::pair<float, float>> translatePoints(std::vector<std::pair<float, float>> points, Vector2D translation) {
+  std::vector<std::pair<float, float>> newPoints;
   for (auto it = points.begin(); it < points.end(); it++) {
     newPoints.push_back(translatePoint(*it, translation));
   }
