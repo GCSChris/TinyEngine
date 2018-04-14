@@ -6,6 +6,9 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 150
 engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT)
 
+game_over = False;
+paused = False;
+
 class Star:
     x = 0;
     y = 0;
@@ -16,7 +19,6 @@ class Star:
         self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
         self.y = random.randint(0, SCREEN_HEIGHT - self.h);
         self.vx = random.uniform(0.85, 1.25) * -1;
-
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
@@ -91,14 +93,17 @@ class Player:
     def checkDie(self, star):
         if (engine.RectIntersect(int(self.x), int(self.y), int(self.w), int(self.h),
         int(star.x), int(star.y), int(star.w), int(star.h))):
-            print("DEAD!\n");
+            global paused;
+            global game_over;
+            paused = True;
+            game_over = True;
 
 # --------------------------
 
 player = Player(50);
 
 engine.PlayMusic("music.wav");
-engine.SetBackgroundColor(95, 65, 245, 255); # dark blue
+engine.SetBackgroundColor(41, 48, 77, 255); # dark blue
 
 FRAMERATE = 60;
 engine.SetFramerate(FRAMERATE);
@@ -114,33 +119,49 @@ def endGameLoop(frameTick):
 
     return frameTick;
 
+
 MAX_NUM_STARS = 10;
-score = 0
-while not engine.pressed("q") :
+score = 0;
+
+while not engine.pressed("q"):
     # Clear the screen
     engine.clear();
 
-    # engine.DrawImage("background.png", 0 , 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    if game_over:
+        # TODO add render centered text to engine (C++)
+        engine.RenderText("GAME OVER!", "arial.ttf", 128, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
+        continue;
+
+    if engine.pressed("p"):
+        paused = True;
+    if engine.pressed("r"):
+        paused = False;
+
+    engine.DrawImage("background.png", 0 , 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     engine.RenderText(str(score), "arial.ttf", 12, 20, 20);
 
-    player.update();
+    if not paused:
+        player.update();
     player.draw(frameTick);
 
     Rocket.draw();
 
     for star in starQueue:
-        star.update();
+        if not paused:
+            star.update();
+            player.checkDie(star);
         star.draw();
-        player.checkDie(star);
 
-    if ((len(starQueue) < MAX_NUM_STARS) and (frameTick == 0 and score % 10 == 0)): # max num stars
-        print("making new Star!");
-        starQueue.append(Star()); # rand star
+    if not paused:
+        if ((len(starQueue) < MAX_NUM_STARS)
+        and (frameTick == 0 and score % 10 == 0)): # max num stars
+            print("making new Star!");
+            starQueue.append(Star()); # rand star
 
-    frameTick = endGameLoop(frameTick);
+        frameTick = endGameLoop(frameTick);
 
-    if (frameTick % FRAMERATE == 0):
-        score += 1;
+        if (frameTick % FRAMERATE == 0):
+            score += 1;
 
     # Refresh the screen
     engine.flip();
