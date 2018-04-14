@@ -2,6 +2,9 @@
 #define TINYMATH
 
 #include <cmath>
+#include <vector>
+#include <map>
+#include <iostream>
 
 // Forward references of each of the structs
 struct Vector2D;
@@ -74,9 +77,13 @@ struct Vector2D{
         return (*this);
     }
 
+    std::pair<int, int> getPair() {
+      return std::pair<int, int>(x, y);
+    }
+
 };
 
-Dot(const Vector2D& a, const Vector2D& b){
+float Dot(const Vector2D& a, const Vector2D& b){
   float dotProd = (a[0] * b[0]) + (a[1] * b[1]);
   return dotProd;
 }
@@ -187,14 +194,66 @@ Vector2D multMatrixVector(const Matrix2D& M, const Vector2D& v){
   return vec;
 }
 
-Vector2D vectorRotation(const Vector2D& vect, const Vector2D point, int deg) {
+// Rotate a single point around another point, returning the result
+std::pair<int, int> rotatePoint(std::pair<int, int> point, const Vector2D rotPoint, int degRot) {
   // TODO rotate the given vector around the given point by degrees
-  return vect;
+  std::cout << "rotating point: " << point.first << " " << point.second  << " by degrees: " << degRot << std::endl;
+  Vector2D pointVect = Vector2D(point.first, point.second);
+  Vector2D shiftedPoint = vectorSub(pointVect, rotPoint);
+  float radians = degRot * 3.14159265 / 180;
+  Matrix2D matrix = Matrix2D(cos(radians), -sin(radians), sin(radians), cos(radians));
+  Vector2D rotatedPoint = multMatrixVector(matrix, shiftedPoint);
+  rotatedPoint = vectorAdd(rotatedPoint, rotPoint);
+  std::cout << "rotated point: " << rotatedPoint.x << " " << rotatedPoint.y << std::endl;
+  return rotatedPoint.getPair();
+}
+
+// Rotate points around another point, return the resulting list of points
+std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, int>> points, Vector2D rotPoint, int degRot) {
+  std::vector<std::pair<int, int>> newPoints;
+  for (auto it = points.begin(); it < points.end(); it++) {
+    newPoints.push_back(rotatePoint(*it, rotPoint, degRot));
+  }
+
+  return newPoints;
+}
+
+// Rotates the points around their center (average point), returning the resulting list of points
+std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> points, int degRot) {
+  float avgX = 0;
+  float avgY = 0;
+  int count = 0;
+
+  for (auto it = points.begin(); it < points.end(); it++) {
+    avgX += it->first;
+    avgY += it->second;
+    count++;
+  }
+
+  return rotatePointsAround(points, Vector2D(avgX / count, avgY / count), degRot);
+}
+
+
+std::pair<int, int> translatePoint(std::pair<int, int> point, Vector2D translation) {
+  Vector2D vect = Vector2D(point.first, point.second);
+  vect += translation;
+  std::pair<int, int> result = vect.getPair();
+  return result;
+}
+
+std::vector<std::pair<int, int>> translatePoints(std::vector<std::pair<int, int>> points, Vector2D translation) {
+  std::vector<std::pair<int, int>> newPoints;
+  for (auto it = points.begin(); it < points.end(); it++) {
+    newPoints.push_back(translatePoint(*it, translation));
+  }
+
+  return newPoints;
 }
 
 
 // Include the pybindings
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -212,6 +271,11 @@ PYBIND11_MODULE(tinymath, m){
     m.def("vProject", &Project, "Returns the vector projection");
     m.def("mMultMM", &multMatrixMatrix, "Returns a Matrix2D that is the result of multiplying the given Matrix2Ds");
     m.def("mMultMV", &multMatrixVector, "Returns a Vector2D that is the result of multiplying the given Matrix2D and Vector2D");
+    m.def("TranslatePoint", &translatePoint);
+    m.def("TranslatePoints", &translatePoints);
+    m.def("RotatePoint", &rotatePoint);
+    m.def("RotatePoints", &rotatePoints);
+    m.def("RotatePointsAround", &rotatePointsAround);
 
     py::class_<Vector2D>(m, "Vector2D")
       .def(py::init<float,float>(), py::arg("x"), py::arg("y"))
