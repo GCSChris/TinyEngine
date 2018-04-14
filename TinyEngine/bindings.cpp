@@ -73,7 +73,10 @@ public:
 
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+
     void SetTextColor(int r, int g, int b, int a);
+
+    void SetBackgroundColor(int r, int g, int b, int a);
 
     // Should be call at the end of each game loop. Used for frame limiting
     void ApplyFrameCap();
@@ -102,6 +105,7 @@ private:
     static std::map<std::string, int> keymap;
 
     SDL_Color textColor = { 255, 255, 255, 255 };
+    SDL_Color backgroundColor = {255, 255, 255, 255};
 };
 
 
@@ -118,11 +122,11 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	// Render flag
 
 	// Initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO)< 0){
+	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		errorStream << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
 		success = false;
 	}
-	else{
+	else {
     //Create window
     gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
@@ -165,7 +169,6 @@ SDLGraphicsProgram::~SDLGraphicsProgram(){
 	SDL_Quit();
 }
 
-
 // Initialize OpenGL
 // Setup any of our shaders here.
 bool SDLGraphicsProgram::initGL(){
@@ -175,19 +178,22 @@ bool SDLGraphicsProgram::initGL(){
 	return success;
 }
 
+void SDLGraphicsProgram::SetBackgroundColor(int r, int g, int b, int a) {
+  backgroundColor = {r, g, b, a};
+}
 
-// clear
 // Clears the screen
-void SDLGraphicsProgram::clear(){
-	// Nothing yet!
-    SDL_SetRenderDrawColor(gRenderer, 0x44,0x44,0x4,0xFF);
+void SDLGraphicsProgram::clear() {
+  	// Nothing yet!
+    SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     SDL_RenderClear(gRenderer);
 }
+
 // Flip
 // The flip function gets called once per loop
 // It swaps out the previvous frame in a double-buffering system
 void SDLGraphicsProgram::flip(){
-	// Nothing yet!
+	  // Nothing yet!
     SDL_RenderPresent(gRenderer);
 }
 
@@ -469,6 +475,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
             .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
             .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
+            .def("SetBackgroundColor", &SDLGraphicsProgram::SetBackgroundColor)
     ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
