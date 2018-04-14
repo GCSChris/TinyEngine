@@ -1,18 +1,5 @@
-# Run with:
-#
-# (Linux & Mac) python3.5 test.py -m ./mygameengine.so
-# (Windows) python3.6 test.py -m ./mygameengine.pyd
-#
-# The program should also run with 'python2.7' but you will have
-# to change the 3.5's to 2.7's in your respective build script as
-# well as make sure you compiled with 3.5 or 2.7 load flags.
-#
-# You will see `python3.5-config --includes` for example which corresponds
-# to which version of python you are building.
-# (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
 import mygameengine
 
-# Now use some python libraries for random numbers!
 import random
 
 MAX_SIZE = 600
@@ -30,11 +17,6 @@ class Star:
         self.y = random.randint(MAX_SIZE - 50, MAX_SIZE);
         self.vx = -1;
 
-    # def __init__(self, x, y):
-        # self.x = x
-        # self.y = y
-        # self.vx = -1;
-
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
         engine.DrawRectangle(int(self.x), int(self.y), int(self.w), int(self.h), True);
@@ -46,10 +28,6 @@ class Star:
             self.y = random.randint(MAX_SIZE - 50, MAX_SIZE);
 
 
-# def makeRandomStar():
-    # y = random.randint(0, 50);
-    # return Star(400, y);
-
 starQueue = []
 
 class Player:
@@ -57,8 +35,6 @@ class Player:
     h = 32
     vx = 0
     vy = 0
-    # usedJump = False;
-    # usedBooster = False;
 
     def __init__(self, x):
         self.x = x
@@ -72,8 +48,12 @@ class Player:
     def jump(self):
         self.vy -= 4;
 
-    def booster(self):
-        print("boost!");
+    def upBooster(self):
+        print("boost UP!");
+        self.vy -= 2;
+
+    def downBooster(self):
+        print("boost DOWN!");
         self.vy += 3;
 
     def update(self):
@@ -90,21 +70,20 @@ class Player:
             self.usedBooster = False;
 
         if engine.pressed("s") and (not self.usedBooster):
-            player.booster();
+            player.downBooster();
+            self.usedBooster = True;
+
+        if engine.pressed("w") and (not self.usedBooster):
+            player.upBooster();
             self.usedBooster = True;
 
     def checkDie(self, star):
-        return 0; # todo
-        # if (engine.RectIntersect(int(self.x), int(self.y), int(self.w), int(self.h),
-        # int(star.x), int(star.y), int(star.w), int(star.h))):
-            # print("DEAD!\n");
-            # print("");
+        if (engine.RectIntersect(int(self.x), int(self.y), int(self.w), int(self.h),
+        int(star.x), int(star.y), int(star.w), int(star.h))):
+            print("DEAD!\n");
 
 
 player = Player(50);
-# star1 = Star(600, 575);
-# star1 = Star(600);
-# starQueue.append(star1);
 
 engine.PlayMusic("music.wav");
 engine.SetBackgroundColor(95, 65, 245, 255); # dark blue
@@ -142,7 +121,7 @@ while not engine.pressed("q") :
     # player.checkDie(star1);
 
     if ((len(starQueue) < MAX_NUM_STARS) and (frameTick == 0 and score % 10 == 0)): # max num stars
-        print("newStar\n");
+        print("making new Star!");
         starQueue.append(Star()); # rand star
 
     frameTick = endGameLoop(frameTick);
