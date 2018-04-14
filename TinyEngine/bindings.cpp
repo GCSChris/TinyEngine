@@ -24,6 +24,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <algorithm>
 
 #include "SFXManager.h"
 #include "UIManager.h"
@@ -82,6 +83,14 @@ public:
     bool RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
     //check if the given key is pressed
     bool pressed(std::string key);
+    // draws a line from point a to point b
+    void DrawLine(std::pair<int, int> a, std::pair<int, int> b);
+    // draws a list of line
+    void DrawLines(std::vector<std::pair<int, int>> points, bool closed);
+    // returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
+    bool LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d);
+    // determines if any two lines between the lists intersecting (a list of points determines a CLOSED  shape in order)
+    bool ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b);
 
 private:
     // Screen dimension constants
@@ -423,9 +432,59 @@ bool SDLGraphicsProgram::pressed(std::string key){
     return pressed[keymap[key]];
 }
 
+// draws a line from point a to point b
+void SDLGraphicsProgram::DrawLine(std::pair<int, int> a, std::pair<int, int> b) {
+    SDL_RenderDrawLine(gRenderer, a.first, a.second, b.first, b.second);
+}
+// draws a list of line
+void SDLGraphicsProgram::DrawLines(std::vector<std::pair<int, int>> points, bool closed) {
+    for (auto iter = points.begin(); iter < points.end(); iter++) {
+        if (iter + 1 == points.end() && closed) {
+            DrawLine(*iter, *(points.begin()));
+        } else {
+            DrawLine(*iter, *(iter + 1));
+        }
+    }
+}
+// returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
+bool SDLGraphicsProgram::LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d) {
+  float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
+  float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
+  float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
+
+  // Detects parallel lines
+  if (denominator == 0) {
+    // detects coincident lines (parallel and technically the same line) possibly wrong?
+    if (numerator1 == 0 && numerator2 == 0) {
+      // check if either a.first or b.first are in the bounds of [c.first, d.first]
+      int line2LowerX = std::min(c.first, d.first);
+      int line2UpperX = std::max(c.first, d.first);
+      bool xOverlap = (line2LowerX <= a.first && a.first <= line2UpperX) || (line2LowerX <= b.first && b.first <= line2UpperX);
+
+      int line2LowerY = std::min(c.second, d.second);
+      int line2UpperY = std::max(c.second, d.second);
+      bool yOverlap = (line2LowerY <= a.second && a.second <= line2UpperY) || (line2LowerY <= b.second && b.second <= line2UpperY);
+
+      return xOverlap && yOverlap;
+    }
+    return false;
+  }
+
+  float r = numerator1 / denominator;
+  float s = numerator2 / denominator;
+
+  return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
+}
+
+bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b) {
+  // TODO loop through both sets of lines points and check for any intersections
+  return false;
+}
+
 
 // Include the pybindings
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -458,6 +517,10 @@ PYBIND11_MODULE(mygameengine, m){
             .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
             .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
             .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
+            .def("DrawLine", &SDLGraphicsProgram::DrawLine)
+            .def("DrawLines", &SDLGraphicsProgram::DrawLines)
+            .def("LineIntersect", &SDLGraphicsProgram::LineIntersect)
+            .def("ShapeIntersect", &SDLGraphicsProgram::ShapeIntersect)
     ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
