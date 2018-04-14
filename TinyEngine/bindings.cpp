@@ -58,7 +58,8 @@ public:
     // Draws given image as a 2D sprite
     void DrawImage(std::string imgPath, int x, int y, int w, int h);
     // Draws the given frame in a sprite sheet
-    void DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h);
+    void DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
+        int x, int y, int frameWidth, int frameHeight);
     // Plays music from the given resource name_
     void PlayMusic(std::string path);
     // Toggles if the music is being played, returning if the music is playing after
@@ -72,7 +73,10 @@ public:
 
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+
     void SetTextColor(int r, int g, int b, int a);
+
+    void SetBackgroundColor(int r, int g, int b, int a);
 
     // Should be call at the end of each game loop. Used for frame limiting
     void ApplyFrameCap();
@@ -101,6 +105,7 @@ private:
     static std::map<std::string, int> keymap;
 
     SDL_Color textColor = { 255, 255, 255, 255 };
+    SDL_Color backgroundColor = {255, 255, 255, 255};
 };
 
 
@@ -117,18 +122,18 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	// Render flag
 
 	// Initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO)< 0){
+	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		errorStream << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
 		success = false;
 	}
-	else{
-	    //Create window
-    	gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+	else {
+    //Create window
+    gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
-        // Check if Window did not create.
-        if( gWindow == NULL ){
-			errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
-			success = false;
+    // Check if Window did not create.
+    if( gWindow == NULL ){
+		  errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
+	    success = false;
 		}
 
 		//Create a Renderer to draw on
@@ -164,7 +169,6 @@ SDLGraphicsProgram::~SDLGraphicsProgram(){
 	SDL_Quit();
 }
 
-
 // Initialize OpenGL
 // Setup any of our shaders here.
 bool SDLGraphicsProgram::initGL(){
@@ -174,19 +178,22 @@ bool SDLGraphicsProgram::initGL(){
 	return success;
 }
 
+void SDLGraphicsProgram::SetBackgroundColor(int r, int g, int b, int a) {
+  backgroundColor = {r, g, b, a};
+}
 
-// clear
 // Clears the screen
-void SDLGraphicsProgram::clear(){
-	// Nothing yet!
-    SDL_SetRenderDrawColor(gRenderer, 0x44,0x44,0x4,0xFF);
+void SDLGraphicsProgram::clear() {
+  	// Nothing yet!
+    SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     SDL_RenderClear(gRenderer);
 }
+
 // Flip
 // The flip function gets called once per loop
 // It swaps out the previvous frame in a double-buffering system
 void SDLGraphicsProgram::flip(){
-	// Nothing yet!
+	  // Nothing yet!
     SDL_RenderPresent(gRenderer);
 }
 
@@ -225,12 +232,10 @@ void SDLGraphicsProgram::loop(){
     SDL_StopTextInput();
 }
 
-
 // Get Pointer to Window
 SDL_Window* SDLGraphicsProgram::getSDLWindow(){
   return gWindow;
 }
-
 
 // Okay, render our rectangles!
 void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
@@ -243,22 +248,40 @@ void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
 }
 
 void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
-    SDL_SetRenderDrawColor(gRenderer, a, r, g, b);
+    SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-  std::string bananaString = "battery.png";
-  SDL_Texture* texture = ResourceManager::instance().getTexture(bananaString, gRenderer);
-  SDL_RenderCopy(gRenderer, texture, NULL, NULL); //TODO dest rectangle
+  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+
+	SDL_Rect dest = { x, y, w, h };
+
+  SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
-void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameNum, int x, int y, int w, int h) {
+static int getNumColumns(std::string fileName, int frameWidth) {
+  SDL_Point dimensions = ResourceManager::instance().getIMGDimensions(fileName);
+  int width = dimensions.x;
+  return (width / frameWidth);
+}
 
+void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
+    int x, int y, int frameWidth, int frameHeight) {
+
+  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+
+  int currentFrame = frameTick * spriteNumFrames / framerate;
+
+  int numColumns = getNumColumns(imgPath, frameWidth);
+  int frameRectX = (currentFrame % numColumns) * frameWidth;
+  int frameRectY = (currentFrame / numColumns) * frameHeight;
+  SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
+  SDL_Rect dest = { x, y, frameWidth, frameHeight };
+  SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 
 void SDLGraphicsProgram::PlayMusic(std::string path) {
   SFXManager::instance().playMusic(path);
-
 }
 
 bool SDLGraphicsProgram::ToggleMusic() {
@@ -280,11 +303,9 @@ int SDLGraphicsProgram::GetMusicVolume() {
 
 void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
   textColor = { r, g, b, a };
-  // UIManager::instance().SetTextColor(textColor);
 }
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
-  // SDL_Color textColor = { 255, 255, 255, 255 };
   UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
@@ -400,7 +421,7 @@ std::map<std::string, int> SDLGraphicsProgram::keymap = []
 bool SDLGraphicsProgram::pressed(std::string key){
     static std::map<int, bool> pressed;
 
-//from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
+    // from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
     SDL_Event event;
     while( SDL_PollEvent(&event))
     {
@@ -442,6 +463,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("pressed", &SDLGraphicsProgram::pressed)
             .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
             .def("DrawImage", &SDLGraphicsProgram::DrawImage)
+            .def("DrawFrame", &SDLGraphicsProgram::DrawFrame)
             .def("SetColor", &SDLGraphicsProgram::SetColor)
             .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
             .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
@@ -453,6 +475,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
             .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
             .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
+            .def("SetBackgroundColor", &SDLGraphicsProgram::SetBackgroundColor)
     ;
 // We do not need to expose everything to our users!
 //            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
