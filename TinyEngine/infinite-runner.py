@@ -2,8 +2,9 @@ import mygameengine
 
 import random
 
-SCREEN_WIDTH = 600
+SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 150
+GROUND_HEIGHT = 10
 engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 game_over = False;
@@ -17,7 +18,7 @@ class Star:
 
     def __init__(self):
         self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
-        self.y = random.randint(0, SCREEN_HEIGHT - self.h);
+        self.y = random.randint(GROUND_HEIGHT + self.h, SCREEN_HEIGHT - self.h);
         self.vx = random.uniform(0.85, 1.25) * -1;
 
     def draw(self):
@@ -26,8 +27,9 @@ class Star:
 
     def update(self):
         self.x = self.x + self.vx;
-        if (self.x < 0):
-            self.x = random.randint(int(SCREEN_WIDTH * 1.5), SCREEN_WIDTH * 2);
+        if (self.x - self.w <= 0):
+            # self.x = random.randint(int(SCREEN_WIDTH * 1.5), SCREEN_WIDTH * 2);
+            self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
             self.y = random.randint(0, SCREEN_HEIGHT - self.h);
             self.vx = random.uniform(0.6, 1.25) * -1;
 
@@ -38,8 +40,8 @@ class Rocket:
         w = 32
         h = 64
 
-        x = SCREEN_WIDTH - w;
-        y = SCREEN_HEIGHT - h;
+        x = SCREEN_WIDTH - w - 15;
+        y = (SCREEN_HEIGHT - GROUND_HEIGHT) - h;
         engine.DrawImage("rocket.png", int(x), int(y), int(w), int(h));
 
 class Player:
@@ -72,13 +74,13 @@ class Player:
     def update(self):
         self.y = self.y + self.vy;
 
-        if (self.y + self.h < SCREEN_HEIGHT):
+        if (self.y + self.h < SCREEN_HEIGHT - GROUND_HEIGHT):
             self.vy += 0.1; # gravity
         else:
-            self.y = SCREEN_HEIGHT - self.h;
+            self.y = (SCREEN_HEIGHT - GROUND_HEIGHT)- self.h;
             self.vy = 0;
 
-        if engine.pressed("space") and (self.y + self.h >= SCREEN_HEIGHT):
+        if engine.pressed("space") and (self.y + self.h >= SCREEN_HEIGHT - GROUND_HEIGHT):
             player.jump();
             self.usedBooster = False;
 
@@ -103,7 +105,7 @@ class Player:
 player = Player(50);
 
 engine.PlayMusic("music.wav");
-engine.SetBackgroundColor(41, 48, 77, 255); # dark blue
+# engine.SetBackgroundColor(41, 48, 77, 255); # dark blue TODO
 
 FRAMERATE = 60;
 engine.SetFramerate(FRAMERATE);
@@ -127,17 +129,21 @@ while not engine.pressed("q"):
     # Clear the screen
     engine.clear();
 
+    engine.DrawImage("blue-bg.png", 0 , 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    engine.SetColor(145, 145, 145, 255);
+    engine.DrawRectangle(0, SCREEN_HEIGHT - GROUND_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT, True);
+
     if game_over:
-        # TODO add render centered text to engine (C++)
-        engine.RenderText("GAME OVER!", "arial.ttf", 128, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
-        continue;
+        # TODO add render centered text to engine
+        engine.RenderText("GAME OVER!", "arial.ttf", 64, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
+        print("GAME OVER!");
 
     if engine.pressed("p"):
         paused = True;
     if engine.pressed("r"):
         paused = False;
 
-    engine.DrawImage("background.png", 0 , 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     engine.RenderText(str(score), "arial.ttf", 12, 20, 20);
 
     if not paused:
