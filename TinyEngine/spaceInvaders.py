@@ -65,6 +65,13 @@ class Enemy:
             
     def disable(self):
         self.enabled = False
+        
+    def checkCollision(self, colX, colY):
+        if not self.enabled:
+            return False
+        else:
+            return (colX > self.x and colX < self.x + self.w) and (colY > self.y and colY < self.y + self.h)
+            
 
 class Projectile:
     def __init__(self, x, y):
@@ -109,7 +116,7 @@ playerSpeed = 2
 framerate = 30
 
 #stuff for projectiles
-projSpeed = 4
+projSpeed = 6
 projectile = None
 
 #initialize enemy position
@@ -169,8 +176,13 @@ while not engine.pressed("q") and not hitBottom:
         projectile.draw()
         if projectile.move(projSpeed) == 1:
             projectile = None
-            
-    # handle projectile collisions with enemies here
+        else:
+            # handle projectile collisions with enemies here
+            for x in range(0, w):
+                for y in range(0, h):
+                    if enemyMatrix[y][x].checkCollision(projectile.x, projectile.y):
+                        print ("collision")
+                        enemyMatrix[y][x].disable()
 
     #draw player
     player.draw()
