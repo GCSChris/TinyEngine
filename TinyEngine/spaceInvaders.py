@@ -109,9 +109,8 @@ playerSpeed = 2
 framerate = 30
 
 #stuff for projectiles
-projList = []
 projSpeed = 4
-projCountdown = 0;
+projectile = None
 
 #initialize enemy position
 for x in range(0, w):
@@ -158,26 +157,20 @@ while not engine.pressed("q") and not hitBottom:
         for y in range(0, h):
             enemyMatrix[y][x].draw()
      
-    # count down projectile counter
-    if (projCountdown > 0):
-        projCountdown -= 1
-     
     #handle player input
     if engine.pressed("left"):
-        player.move( 0 - playerSpeed)
+        player.move(0 - playerSpeed)
     elif engine.pressed("right"):
         player.move(playerSpeed)
-    elif engine.pressed("space"):
-        if (projCountdown == 0):
-            projList.append(Projectile(player.x + player.w // 2, player.y))
-            projCountdown = framerate * 3
+    elif engine.pressed("space") and projectile == None:
+        projectile = Projectile(player.x + player.w // 2 - 1, player.y)
             
+    if (projectile != None):
+        projectile.draw()
+        if projectile.move(projSpeed) == 1:
+            projectile = None
             
-    for x in range(len(projList)):
-        projList[x].draw()
-        if projList[x].move(projSpeed) == 1:
-            projList.pop(x)
-            x -= 1
+    # handle projectile collisions with enemies here
 
     #draw player
     player.draw()
