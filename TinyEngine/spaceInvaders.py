@@ -6,14 +6,11 @@
 # The program should also run with 'python2.7' but you will have
 # to change the 3.5's to 2.7's in your respective build script as
 # well as make sure you compiled with 3.5 or 2.7 load flags.
-#
-# You will see `python3.5-config --includes` for example which corresponds
-# to which version of python you are building.
-# (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
+
 import mygameengine
 
 w, h = 11, 5;
-MAX_SIZE = 32 * (w + 2)
+MAX_SIZE = 32 * (w + 4)
 playerOffset = 32
 
 engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
@@ -62,6 +59,8 @@ class Enemy:
             else:
                 self.disable()
                 return True
+        else:
+            return False
             
     def disable(self):
         self.enabled = False
@@ -119,15 +118,22 @@ framerate = 30
 projSpeed = 6
 projectile = None
 
+#stuff for score
+score = 0
+scoreMultiplier = 100
+maxScore = w * h * 100
+
 #initialize enemy position
 for x in range(0, w):
     for y in range(0, h):
-        enemyMatrix[y][x] = Enemy(16 + x*32, 64 + 32*y)
+        enemyMatrix[y][x] = Enemy(16 + x*32, 32 + 32*y)
 
 player = Player()
 
+won = False
+
 engine.SetFramerate(framerate);
-while not engine.pressed("q") and not hitBottom:
+while not engine.pressed("q") and not hitBottom and not won:
 
     engine.SetBackgroundColor(0, 0, 0, 255)
 	
@@ -135,7 +141,7 @@ while not engine.pressed("q") and not hitBottom:
     engine.clear()
     
     #shift enemies left or right as appropriate, and shift down at the end of a row
-    if numShifts <= 48 and not restFrame:
+    if numShifts <= 112 and not restFrame:
         for x in range(0, w):
             for y in range(0, h):
                 if movingLeft:
@@ -181,18 +187,34 @@ while not engine.pressed("q") and not hitBottom:
             for x in range(0, w):
                 for y in range(0, h):
                     if enemyMatrix[y][x].checkCollision(projectile.x, projectile.y):
-                        print ("collision")
+                        score += scoreMultiplier
                         enemyMatrix[y][x].disable()
 
     #draw player
     player.draw()
+    
+    #draw score
+    engine.SetTextColor(255, 255, 255, 255)
+    engine.RenderText("score: " + str(score), "arial.ttf", 15, 10, 10)
+    
+    #check endgame
+    if (score == maxScore):
+        won = True
 
     # Add a little delay
     engine.FrameRateDelay()
     # Refresh the screen
     engine.flip()
     
-while not engine.pressed("q"):
+while won and not engine.pressed("q"):
+    engine.clear()
+
+    engine.SetTextColor(255, 255, 255, 255)
+    engine.RenderText("YOU WIN!!!", "arial.ttf", 25, 150, 200)
+    
+    engine.flip()
+    
+while not won and not engine.pressed("q"):
     engine.clear()
 
     engine.SetTextColor(255, 255, 255, 255)
