@@ -17,9 +17,12 @@ class Star:
     h = 10
 
     def __init__(self):
-        self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
-        self.y = random.randint(0, (SCREEN_HEIGHT - GROUND_HEIGHT)- self.h);
+        self.setRandStarXY();
         self.vx = random.uniform(0.85, 1.25) * -1;
+
+    def setRandStarXY(self):
+        self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
+        self.y = random.randint(0, (SCREEN_HEIGHT - GROUND_HEIGHT) - self.h);
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255);
@@ -28,12 +31,9 @@ class Star:
     def update(self):
         self.x = self.x + self.vx;
         if (self.x - self.w <= 0):
-            # self.x = random.randint(int(SCREEN_WIDTH * 1.5), SCREEN_WIDTH * 2);
-            self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
-            self.y = random.randint(0, (SCREEN_HEIGHT - GROUND_HEIGHT)- self.h);
+            self.setRandStarXY();
             self.vx = random.uniform(0.6, 1.25) * -1;
 
-starQueue = [];
 
 class Rocket:
     def draw():
@@ -64,11 +64,9 @@ class Player:
         self.vy -= 4;
 
     def upBooster(self):
-        print("boost UP!");
         self.vy -= 3.5;
 
     def downBooster(self):
-        print("boost DOWN!");
         self.vy += 3;
 
     def update(self):
@@ -102,14 +100,12 @@ class Player:
 
 # --------------------------
 
-player = Player(50);
-
-engine.PlayMusic("music.wav");
-# engine.SetBackgroundColor(41, 48, 77, 255); # dark blue TODO
-
+starQueue = [];
 FRAMERATE = 60;
 engine.SetFramerate(FRAMERATE);
 frameTick = 0;
+engine.PlayMusic("music.wav");
+player = Player(50);
 
 def endGameLoop(frameTick):
     # Add a little delay
@@ -135,15 +131,14 @@ while not engine.pressed("q"):
     engine.DrawRectangle(0, SCREEN_HEIGHT - GROUND_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT, True);
 
     if game_over:
-        # TODO add render centered text to engine
-        engine.RenderText("GAME OVER!", "arial.ttf", 32, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
-        engine.RenderText("YOUR SCORE WAS: " + str(score) + "!", "arial.ttf", 32, SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2) + 32);
-
-        print("GAME OVER!");
+        engine.RenderCenteredText("GAME OVER!", "arial.ttf", 32, SCREEN_HEIGHT // 3);
+        engine.RenderCenteredText("YOUR SCORE WAS: " + str(score) + "!", "arial.ttf", 32, ((SCREEN_HEIGHT // 3) * 2));
+    elif paused:
+        engine.RenderCenteredText("PAUSED", "arial.ttf", 32, SCREEN_HEIGHT // 2);
 
     if engine.pressed("p"):
         paused = True;
-    if engine.pressed("r"):
+    if engine.pressed("o"):
         paused = False;
 
     engine.RenderText(str(score), "arial.ttf", 12, 20, 20);
@@ -163,7 +158,6 @@ while not engine.pressed("q"):
     if not paused:
         if ((len(starQueue) < MAX_NUM_STARS)
         and (frameTick == 0 and score % 10 == 0)): # max num stars
-            print("making new Star!");
             starQueue.append(Star()); # rand star
 
         frameTick = endGameLoop(frameTick);
