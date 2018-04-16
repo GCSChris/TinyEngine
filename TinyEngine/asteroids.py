@@ -1,4 +1,4 @@
-import mygameengine
+import tinyengine
 import tinymath
 
 # Now use some python libraries for random numbers!
@@ -6,7 +6,7 @@ import random
 import math
 
 MAX_SIZE = 400
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE, "Asteroids")
+engine = tinyengine.GameEngine(MAX_SIZE,MAX_SIZE, "Asteroids")
 
 def degreeToRadians(deg):
     return deg * 3.14159265 / 180

@@ -1,4 +1,4 @@
-import mygameengine
+import tinyengine
 import tinymath
 
 import random
@@ -6,7 +6,7 @@ import random
 SCREEN_WIDTH = 500;
 SCREEN_HEIGHT = 500;
 
-engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT, "TinyEngine!");
+engine = tinyengine.GameEngine(SCREEN_WIDTH, SCREEN_HEIGHT, "TinyEngine!");
 
 class Rocket: # Static images!
 

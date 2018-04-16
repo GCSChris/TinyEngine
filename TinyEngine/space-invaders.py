@@ -1,19 +1,19 @@
 # Run with:
 #
-# (Linux & Mac) python3.5 test.py -m ./mygameengine.so
-# (Windows) python3.6 test.py -m ./mygameengine.pyd
+# (Linux & Mac) python3.5 test.py -m ./tinyengine.so
+# (Windows) python3.6 test.py -m ./tinyengine.pyd
 #
 # The program should also run with 'python2.7' but you will have
 # to change the 3.5's to 2.7's in your respective build script as
 # well as make sure you compiled with 3.5 or 2.7 load flags.
 
-import mygameengine
+import tinyengine
 
 w, h = 11, 5;
 MAX_SIZE = 32 * (w + 4)
 playerOffset = 32
 
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE,"SPACE INVADERS")
+engine = tinyengine.GameEngine(MAX_SIZE,MAX_SIZE,"SPACE INVADERS")
 
 class Player:
     w = 16

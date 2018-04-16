@@ -1,11 +1,11 @@
-import mygameengine
+import tinyengine
 
 import random
 
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 150
 GROUND_HEIGHT = 10
-engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT, "Space Race!")
+engine = tinyengine.GameEngine(SCREEN_WIDTH, SCREEN_HEIGHT, "Space Race!")
 
 game_over = False;
 paused = False;
@@ -131,10 +131,10 @@ while not engine.pressed("q"):
     engine.DrawRectangle(0, SCREEN_HEIGHT - GROUND_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT, True);
 
     if game_over:
-        engine.RenderCenteredText("GAME OVER!", "arial.ttf", 32, SCREEN_HEIGHT // 3);
-        engine.RenderCenteredText("YOUR SCORE WAS: " + str(score) + "!", "arial.ttf", 32, ((SCREEN_HEIGHT // 3) * 2));
+        engine.RenderCenteredText("GAME OVER!", "resources/space-race/arial.ttf", 32, SCREEN_HEIGHT // 3);
+        engine.RenderCenteredText("YOUR SCORE WAS: " + str(score) + "!", "resources/space-race/arial.ttf", 32, ((SCREEN_HEIGHT // 3) * 2));
     elif paused:
-        engine.RenderCenteredText("PAUSED", "arial.ttf", 32, SCREEN_HEIGHT // 2);
+        engine.RenderCenteredText("PAUSED", "resources/space-race/arial.ttf", 32, SCREEN_HEIGHT // 2);
 
     if engine.pressed("p"):
         paused = True;

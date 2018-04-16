@@ -1,14 +1,6 @@
-#ifndef SDLGRAPHICSPROGRAM
-#define SDLGRAPHICSPROGRAM
+#ifndef GAMEENGINE
+#define GAMEENGINE
 
-// ==================== Libraries ==================
-// Depending on the operating system we use
-// The paths to SDL are actually different.
-// The #define statement should be passed in
-// when compiling using the -D argument.
-// This gives an example of how a programmer
-// may support multiple platforms with different
-// dependencies.
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
@@ -27,22 +19,24 @@
 
 #include "SFXManager.h"
 #include "UIManager.h"
-// Purpose:
-// This class sets up a full graphics program using SDL
-class SDLGraphicsProgram{
+
+/**
+ * TinyEngine API.
+ */
+class GameEngine {
 public:
 
     /**
     * Constructs a new SDL graphics program.
     */
-    SDLGraphicsProgram(/** desired window width */int w, /** desired window width */int h,
+    GameEngine(/** desired window width */int w, /** desired window width */int h,
     /** Desired window title. */ std::string title);
 
 
     /**
     * Destructs a SDL graphics program.
     */
-    ~SDLGraphicsProgram();
+    ~GameEngine();
 
     /**
     * Setup OpenGL.
@@ -240,7 +234,7 @@ private:
 };
 
 
-SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWidth(w),screenHeight(h){
+GameEngine::GameEngine(int w, int h, std::string title):screenWidth(w),screenHeight(h){
     // Initialization flag
     bool success = true;
     // String to hold any errors that occur.
@@ -276,17 +270,17 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWi
 
         // If initialization did not work, then print out a list of errors in the constructor.
         if(!success){
-            errorStream << "SDLGraphicsProgram::SDLGraphicsProgram - Failed to initialize!\n";
+            errorStream << "GameEngine::GameEngine - Failed to initialize!\n";
             std::string errors=errorStream.str();
             SDL_Log("%s\n",errors.c_str());
         } else {
-            SDL_Log("SDLGraphicsProgram::SDLGraphicsProgram - No SDL, GLAD, or OpenGL, errors detected during initialization\n\n");
+            SDL_Log("GameEngine::GameEngine - No SDL, GLAD, or OpenGL, errors detected during initialization\n\n");
         }
 
 }
 
 // Proper shutdown of SDL and destroy initialized objects
-SDLGraphicsProgram::~SDLGraphicsProgram(){
+GameEngine::~GameEngine(){
     //Destroy window
     SDL_DestroyWindow( gWindow );
     // Point gWindow to NULL to ensure it points to nothing.
@@ -297,19 +291,19 @@ SDLGraphicsProgram::~SDLGraphicsProgram(){
 
 // Initialize OpenGL
 // Setup any of our shaders here.
-bool SDLGraphicsProgram::initGL(){
+bool GameEngine::initGL(){
     //Success flag
     bool success = true;
 
     return success;
 }
 
-void SDLGraphicsProgram::SetBackgroundColor(int r, int g, int b, int a) {
+void GameEngine::SetBackgroundColor(int r, int g, int b, int a) {
     backgroundColor = {r, g, b, a};
 }
 
 // Clears the screen
-void SDLGraphicsProgram::clear() {
+void GameEngine::clear() {
     // Nothing yet!
     SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     SDL_RenderClear(gRenderer);
@@ -318,17 +312,17 @@ void SDLGraphicsProgram::clear() {
 // Flip
 // The flip function gets called once per loop
 // It swaps out the previvous frame in a double-buffering system
-void SDLGraphicsProgram::flip() {
+void GameEngine::flip() {
     // Nothing yet!
     SDL_RenderPresent(gRenderer);
 }
 
-void SDLGraphicsProgram::delay(int milliseconds) {
+void GameEngine::delay(int milliseconds) {
     SDL_Delay(milliseconds);
 }
 
 //Loops forever!
-void SDLGraphicsProgram::loop(){
+void GameEngine::loop(){
     // Main loop flag
     // If this is quit = 'true' then the program terminates.
     bool quit = false;
@@ -357,12 +351,12 @@ void SDLGraphicsProgram::loop(){
 }
 
 // Get Pointer to Window
-SDL_Window* SDLGraphicsProgram::getSDLWindow(){
+SDL_Window* GameEngine::getSDLWindow(){
     return gWindow;
 }
 
 // Okay, render our rectangles!
-void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
+void GameEngine::DrawRectangle(int x, int y, int w, int h, bool fill){
     SDL_Rect fillRect = {x,y,w,h};
     if (fill) {
         SDL_RenderFillRect(gRenderer, &fillRect);
@@ -371,11 +365,11 @@ void SDLGraphicsProgram::DrawRectangle(int x, int y, int w, int h, bool fill){
     }
 }
 
-void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
+void GameEngine::SetColor(int r, int g, int b, int a) {
     SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
 }
 
-void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
+void GameEngine::DrawImage(std::string imgPath, int x, int y, int w, int h) {
     SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
     SDL_Rect dest = { x, y, w, h };
     SDL_RenderCopy(gRenderer, texture, NULL, &dest);
@@ -387,7 +381,7 @@ static int getNumColumns(std::string fileName, int frameWidth) {
     return (width / frameWidth);
 }
 
-void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
+void GameEngine::DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
     int x, int y, int frameWidth, int frameHeight) {
 
     SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
@@ -404,41 +398,41 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int sprit
     SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 
-void SDLGraphicsProgram::PlayMusic(std::string path) {
+void GameEngine::PlayMusic(std::string path) {
     SFXManager::instance().playMusic(path);
 }
 
-bool SDLGraphicsProgram::ToggleMusic() {
+bool GameEngine::ToggleMusic() {
     SFXManager::instance().toggleMusic();
     return (Mix_PlayingMusic() != 0);
 }
 
-void SDLGraphicsProgram::PlaySFX(std::string path) {
+void GameEngine::PlaySFX(std::string path) {
     SFXManager::instance().playSFX(path);
 }
 
-void SDLGraphicsProgram::SetMusicVolume(int volume) {
+void GameEngine::SetMusicVolume(int volume) {
     SFXManager::instance().setMusicVolume(volume);
 }
 
-int SDLGraphicsProgram::GetMusicVolume() {
+int GameEngine::GetMusicVolume() {
     SFXManager::instance().getMusicVolume();
 }
 
-void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
+void GameEngine::SetTextColor(int r, int g, int b, int a) {
     textColor = { r, g, b, a };
 }
 
-void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
+void GameEngine::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
     UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
-void SDLGraphicsProgram::RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int y) {
+void GameEngine::RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int y) {
     UIManager::instance().renderCenteredText(gRenderer, text, fontStyle, fontSize, textColor, y, screenWidth);
 }
 
 
-void SDLGraphicsProgram::ApplyFrameCap() {
+void GameEngine::ApplyFrameCap() {
     int tickCount = SDL_GetTicks();
     int delayTime = 1000 / framerate - (tickCount - frameTickCount);
     if (delayTime > 0) {
@@ -447,18 +441,18 @@ void SDLGraphicsProgram::ApplyFrameCap() {
     frameTickCount = tickCount;
 }
 
-void SDLGraphicsProgram::SetFramerate(int fps) {
+void GameEngine::SetFramerate(int fps) {
     framerate = fps;
 }
 
-bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+bool GameEngine::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
     SDL_Rect r1 = { x1, y1, w1, h1 };
     SDL_Rect r2 = { x2, y2, w2, h2 };
 
     return SDL_HasIntersection(&r1, &r2);
 }
 
-std::map<std::string, int> SDLGraphicsProgram::keymap = []
+std::map<std::string, int> GameEngine::keymap = []
 {
     std::map<std::string, int> binds;
     binds["esc"] = SDLK_ESCAPE;
@@ -547,7 +541,7 @@ std::map<std::string, int> SDLGraphicsProgram::keymap = []
     return binds;
 }();
 
-bool SDLGraphicsProgram::pressed(std::string key){
+bool GameEngine::pressed(std::string key){
     static std::map<int, bool> pressed;
 
     // from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
@@ -567,12 +561,12 @@ bool SDLGraphicsProgram::pressed(std::string key){
 }
 
 // Draws a line from point a to point b
-void SDLGraphicsProgram::DrawLine(std::pair<float, float> a, std::pair<float, float> b) {
+void GameEngine::DrawLine(std::pair<float, float> a, std::pair<float, float> b) {
     SDL_RenderDrawLine(gRenderer, a.first, a.second, b.first, b.second);
 }
 
 // Draws a list of line
-void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, bool closed) {
+void GameEngine::DrawLines(std::vector<std::pair<float, float>> points, bool closed) {
     for (auto iter = points.begin(); iter < points.end(); iter++) {
         if (iter + 1 == points.end() && closed) {
             DrawLine(*iter, *(points.begin()));
@@ -583,7 +577,7 @@ void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, 
 }
 
 // Returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
-bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d) {
+bool GameEngine::LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d) {
     float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
     float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
     float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
@@ -612,7 +606,7 @@ bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<floa
     return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
 }
 
-bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
+bool GameEngine::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
     for (std::vector<std::pair<float, float>>::iterator iterA = a.begin(); iterA < a.end(); iterA++) {
         for (std::vector<std::pair<float, float>>::iterator iterB = b.begin(); iterB < b.end(); iterB++) {
             std::pair<float, float> a1 = *iterA;
@@ -643,39 +637,39 @@ namespace py = pybind11;
 
 // Creates a macro function that will be called
 // whenever the module is imported into python
-// 'mygameengine' is what we 'import' into python.
+// 'tinyengine' is what we 'import' into python.
 // 'm' is the interface (creates a py::module object)
 //      for which the bindings are created.
 //  The magic here is in 'template metaprogramming'
-PYBIND11_MODULE(mygameengine, m){
-    m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
+PYBIND11_MODULE(tinyengine, m){
+    m.doc() = "The TinyEngine is python bindings for common SDL functions";
 
-    py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
+    py::class_<GameEngine>(m, "GameEngine")
             .def(py::init<int,int,std::string>(), py::arg("w"), py::arg("h"), py::arg("title"))   // our constructor
-            .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
-            .def("flip", &SDLGraphicsProgram::flip)
-            .def("delay", &SDLGraphicsProgram::delay)
-            .def("pressed", &SDLGraphicsProgram::pressed)
-            .def("DrawRectangle", &SDLGraphicsProgram::DrawRectangle)
-            .def("DrawImage", &SDLGraphicsProgram::DrawImage)
-            .def("DrawFrame", &SDLGraphicsProgram::DrawFrame)
-            .def("SetColor", &SDLGraphicsProgram::SetColor)
-            .def("PlayMusic", &SDLGraphicsProgram::PlayMusic)
-            .def("PlaySFX", &SDLGraphicsProgram::PlaySFX)
-            .def("ToggleMusic", &SDLGraphicsProgram::ToggleMusic)
-            .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
-            .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume)
-            .def("RenderText", &SDLGraphicsProgram::RenderText)
-            .def("RenderCenteredText", &SDLGraphicsProgram::RenderCenteredText)
-            .def("FrameRateDelay", &SDLGraphicsProgram::ApplyFrameCap)
-            .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
-            .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
-            .def("SetTextColor", &SDLGraphicsProgram::SetTextColor)
-            .def("DrawLine", &SDLGraphicsProgram::DrawLine)
-            .def("DrawLines", &SDLGraphicsProgram::DrawLines)
-            .def("LineIntersect", &SDLGraphicsProgram::LineIntersect)
-            .def("ShapeIntersect", &SDLGraphicsProgram::ShapeIntersect)
-            .def("SetBackgroundColor", &SDLGraphicsProgram::SetBackgroundColor);
+            .def("clear", &GameEngine::clear) // Expose member methods
+            .def("flip", &GameEngine::flip)
+            .def("delay", &GameEngine::delay)
+            .def("pressed", &GameEngine::pressed)
+            .def("DrawRectangle", &GameEngine::DrawRectangle)
+            .def("DrawImage", &GameEngine::DrawImage)
+            .def("DrawFrame", &GameEngine::DrawFrame)
+            .def("SetColor", &GameEngine::SetColor)
+            .def("PlayMusic", &GameEngine::PlayMusic)
+            .def("PlaySFX", &GameEngine::PlaySFX)
+            .def("ToggleMusic", &GameEngine::ToggleMusic)
+            .def("SetMusicVolume", &GameEngine::SetMusicVolume)
+            .def("GetMusicVolume", &GameEngine::GetMusicVolume)
+            .def("RenderText", &GameEngine::RenderText)
+            .def("RenderCenteredText", &GameEngine::RenderCenteredText)
+            .def("FrameRateDelay", &GameEngine::ApplyFrameCap)
+            .def("SetFramerate", &GameEngine::SetFramerate)
+            .def("RectIntersect", &GameEngine::RectIntersect)
+            .def("SetTextColor", &GameEngine::SetTextColor)
+            .def("DrawLine", &GameEngine::DrawLine)
+            .def("DrawLines", &GameEngine::DrawLines)
+            .def("LineIntersect", &GameEngine::LineIntersect)
+            .def("ShapeIntersect", &GameEngine::ShapeIntersect)
+            .def("SetBackgroundColor", &GameEngine::SetBackgroundColor);
 }
 
 #endif
