@@ -235,7 +235,7 @@ private:
 // Initialization function
 // Returns a true or false value based on successful completion of setup.
 // Takes in dimensions of window.
-SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight(h){
+SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWidth(w),screenHeight(h){
 	// Initialization flag
 	bool success = true;
 	// String to hold any errors that occur.
@@ -251,7 +251,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	}
 	else {
     //Create window
-    gWindow = SDL_CreateWindow("My Game!", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow(title.c_str(), 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
     // Check if Window did not create.
     if( gWindow == NULL ){
@@ -568,21 +568,22 @@ bool SDLGraphicsProgram::pressed(std::string key){
 }
 
 // draws a line from point a to point b
-void SDLGraphicsProgram::DrawLine(std::pair<int, int> a, std::pair<int, int> b) {
+void SDLGraphicsProgram::DrawLine(std::pair<float, float> a, std::pair<float, float> b) {
     SDL_RenderDrawLine(gRenderer, a.first, a.second, b.first, b.second);
 }
+
 // draws a list of line
-void SDLGraphicsProgram::DrawLines(std::vector<std::pair<int, int>> points, bool closed) {
+void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, bool closed) {
     for (auto iter = points.begin(); iter < points.end(); iter++) {
         if (iter + 1 == points.end() && closed) {
             DrawLine(*iter, *(points.begin()));
-        } else {
+        } else if (iter + 1 != points.end()){
             DrawLine(*iter, *(iter + 1));
         }
     }
 }
 // returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
-bool SDLGraphicsProgram::LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d) {
+bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d) {
   float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
   float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
   float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
@@ -611,8 +612,26 @@ bool SDLGraphicsProgram::LineIntersect(std::pair<int, int> a, std::pair<int, int
   return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
 }
 
-bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b) {
-  // TODO loop through both sets of lines points and check for any intersections
+bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
+  for (std::vector<std::pair<float, float>>::iterator iterA = a.begin(); iterA < a.end(); iterA++) {
+    for (std::vector<std::pair<float, float>>::iterator iterB = b.begin(); iterB < b.end(); iterB++) {
+      std::pair<float, float> a1 = *iterA;
+      std::pair<float, float> a2 = *(iterA + 1);
+      if (iterA + 1 >= a.end()) {
+        a2 = *(a.begin());
+      }
+
+      std::pair<float, float> b1 = *iterB;
+      std::pair<float, float> b2 = *(iterB + 1);
+      if (iterB + 1 >= b.end()) {
+        b2 = *(b.begin());
+      }
+
+      if (LineIntersect(a1, a2, b1, b2)) {
+        return true;
+      }
+    }
+  }
   return false;
 }
 
@@ -634,7 +653,7 @@ PYBIND11_MODULE(mygameengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
-            .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
+            .def(py::init<int,int,std::string>(), py::arg("w"), py::arg("h"), py::arg("title"))   // our constructor
             .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
             .def("flip", &SDLGraphicsProgram::flip)
             .def("delay", &SDLGraphicsProgram::delay)
