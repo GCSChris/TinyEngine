@@ -35,7 +35,8 @@ public:
     /**
     * Constructs a new SDL graphics program.
     */
-    SDLGraphicsProgram(/** desired window width */int w, /** desired window width */int h);
+    SDLGraphicsProgram(/** desired window width */int w, /** desired window width */int h,
+    /** Desired window title. */ std::string title);
 
 
     /**
@@ -189,29 +190,29 @@ public:
     /**
     * Draws a line from point a to point b.
     */
-    void DrawLine(/** The starting (x, y) position of the line */ std::pair<int, int> a,
-        /** The ending (x, y) position of the line */ std::pair<int, int> b);
+    void DrawLine(/** The starting (x, y) position of the line */ std::pair<float, float> a,
+        /** The ending (x, y) position of the line */ std::pair<float, float> b);
 
     /**
     * Draws lines between a list of points.
     */
-    void DrawLines(/** A list of points to draw the lines */ std::vector<std::pair<int, int>> points,
+    void DrawLines(/** A list of points to draw the lines */ std::vector<std::pair<float, float>> points,
         /** Whether the lines form a closed shape */ bool closed);
 
     /**
     * Returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting.
     */
-    bool LineIntersect(/** Starting point of first line */std::pair<int, int> a,
-        /** Ending point of first line */ std::pair<int, int> b,
-        /** Starting point of second line */ std::pair<int, int> c,
-        /** Ending point of second line */ std::pair<int, int> d);
+    bool LineIntersect(/** Starting point of first line */std::pair<float, float> a,
+        /** Ending point of first line */ std::pair<float, float> b,
+        /** Starting point of second line */ std::pair<float, float> c,
+        /** Ending point of second line */ std::pair<float, float> d);
 
     /**
     * Determines if any two lines between the lists intersect (
     * a list of points determines a CLOSED shape in order)
     */
-    bool ShapeIntersect(/** First line list */ std::vector<std::pair<int, int>> a,
-        /** second line list */ std::vector<std::pair<int, int>> b);
+    bool ShapeIntersect(/** First line list */ std::vector<std::pair<float, float>> a,
+        /** second line list */ std::vector<std::pair<float, float>> b);
 
 private:
     /** The height of the window. */

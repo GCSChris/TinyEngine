@@ -206,7 +206,7 @@ std::pair<float, float> multMatrixVector(/** The matrix */const Matrix2D& M, /**
   float x = Dot(Vector2D(M[0][0], M[0][1]).getPair(), vPair);
   float y = Dot(Vector2D(M[1][0], M[1][1]).getPair(), vPair);
   Vector2D vec = Vector2D(x, y);
-  return vec.getPoints();
+  return vec.getPair();
 }
 
 /** Returns the given point rotated counter clockwise around the rotation point by the given angle in degrees*/
