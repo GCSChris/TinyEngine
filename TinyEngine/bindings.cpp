@@ -32,66 +32,183 @@
 class SDLGraphicsProgram{
 public:
 
-    // Constructor
-    SDLGraphicsProgram(int w, int h);
-    // Destructor
+    /**
+    * Constructs a new SDL graphics program.
+    */
+    SDLGraphicsProgram(/** desired window width */int w, /** desired window width */int h);
+    
+    
+    /**
+    * Destructs a SDL graphics program.
+    */
     ~SDLGraphicsProgram();
-    // Setup OpenGL
+    
+    /**
+    * Setup OpenGL.
+    */
     bool initGL();
-    // Clears the screen
+    
+    /**
+    * Clears the screen.
+    */
     void clear();
-    // Flips to new buffer
+    
+    /**
+    * Renders the next flame by flipping to the new buffer.
+    */
     void flip();
-    // Delay rendering
-    void delay(int milliseconds);
-    // loop that runs forever
+    
+    /**
+    * Delay rendering by a given amount.
+    */
+    void delay(/** Time in milliseconds to */ int milliseconds);
+    
+    /**
+    * Loops forever.
+    */
     void loop();
-    // Get Pointer to Window
+    
+    /**
+    * Retrieve a pointer to the SDL Window.
+    */
     SDL_Window* getSDLWindow();
-    // Draw a simple rectangle
-    void DrawRectangle(int x, int y, int w, int h, bool fill);
-    // Sets the color for the Renderer
-    void SetColor(int r, int g, int b, int a);
-    // Draws given image as a 2D sprite
-    void DrawImage(std::string imgPath, int x, int y, int w, int h);
-    // Draws the given frame in a sprite sheet
-    void DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
-        int x, int y, int frameWidth, int frameHeight);
-    // Plays music from the given resource name_
-    void PlayMusic(std::string path);
-    // Toggles if the music is being played, returning if the music is playing after
+    
+    /**
+    * Draws a rectangle whose upper left corner is at the given coordinates,
+    * and has the given dimensions. Can be wireframe or filled.
+    */
+    void DrawRectangle(/** desired x position */ int x, /** desired y position */ int y,
+        /** desired rectangle width */ int w, /** desired window height*/ int h, 
+        /** should the rectangle be filled in */ bool fill);
+    
+    /** 
+    * Sets the renderer's color given an RGB and alpha value.
+    */
+    void SetColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
+        /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
+     
+    /** 
+    * Draw an image at the given X,Y position, with the given dimensions.
+    */
+    void DrawImage(/** The filepath */ std::string imgPath, 
+        /** The upper left x position of the image */ int x, 
+        /** The upper left y position of the image */ int y, /** The width of the image */ int w,
+        /** The height of the image */ int h);
+    
+    /**
+    * Draws a frame of a sprite sheet.
+    */
+    void DrawFrame(/** The filepath */ std::string imgPath, /** The frame to render */ int frameTick,
+        /** The total number of frames */int spriteNumFrames,
+        /** The upper left x position of the image */ int x, 
+        /** The upper left y position of the image */ int y, 
+        /** Width of 1 frame */ int frameWidth, /** Height of 1 frame */ int frameHeight);
+        
+    /**
+    * Plays music from the given file.
+    */
+    void PlayMusic(/** The filepath of the music file */ std::string path);
+    
+    /**
+    * Toggles if the music is being played, returning if the music is playing after.
+    */
     bool ToggleMusic();
-    // Plays the sound effect at the given path
-    void PlaySFX(std::string path);
-    // Sets the volume of the music
-    void SetMusicVolume(int volume);
-    // Gets the music volume
+    
+    /**
+    Plays the sound effect at the given path.
+    */
+    void PlaySFX(/** The filepath of the sound effect file */ std::string path);
+    
+    /**
+    * Set the music volume from 0 to 128.
+    */
+    void SetMusicVolume(/** The volume. Must be between 0 and 128 */ int volume);
+    
+    /**
+    * Gets the currently set music volume.
+    */
     int GetMusicVolume();
 
-    // Renders the given text
-    void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
-    void RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int x);
+    /**
+    * Renders the given text.
+    */
+    void RenderText(/** Text to render */ std::string text, 
+        /** Name of the font (.ttf) file to render in*/ std::string fontStyle,
+        /** The font size to render at */ int fontSize, /** left hand x position of text */ int x,
+        /** Upper y position of text */ int y);
+        
+    
+    /**
+    * Renders the given text centered on the x axis on the screen.
+    */
+    void RenderCenteredText(/** Text to render */ std::string text, 
+        /** Name of the font (.ttf) file to render in*/ std::string fontStyle, 
+        /** The font size to render at */ int fontSize, 
+        /** Upper y position of text */int y);
 
-    void SetTextColor(int r, int g, int b, int a);
+    /**
+    * Sets the text render color.
+    */
+    void SetTextColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
+        /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
 
-    void SetBackgroundColor(int r, int g, int b, int a);
+    /**
+    * Sets the background color.
+    */
+    void SetBackgroundColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
+        /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
 
-    // Should be call at the end of each game loop. Used for frame limiting
+    /**
+    * Should be called at the end of each game loop. Used for frame limiting.
+    */
     void ApplyFrameCap();
-    // Sets the framerate to cap at the given frames per second
-    void SetFramerate(int fps);
-    // returns if the given rectangles overlap
-    bool RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
-    //check if the given key is pressed
-    bool pressed(std::string key);
-    // draws a line from point a to point b
-    void DrawLine(std::pair<int, int> a, std::pair<int, int> b);
-    // draws a list of line
-    void DrawLines(std::vector<std::pair<int, int>> points, bool closed);
-    // returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
-    bool LineIntersect(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d);
-    // determines if any two lines between the lists intersecting (a list of points determines a CLOSED  shape in order)
-    bool ShapeIntersect(std::vector<std::pair<int, int>> a, std::vector<std::pair<int, int>> b);
+    
+    /**
+    * Sets the framerate to cap at the given frames per second.
+    */
+    void SetFramerate(/** desired framerate */ int fps);
+    
+    /**
+    * Checks for intersection between two rectangles. 
+    */
+    bool RectIntersect(/** x position of first rectangle */ int x1, 
+        /** y position of first rectangle */int y1, /** width of first rectangle */ int w1, 
+        /** height of first rectangle */ int h1, /** x position of second rectangle */ int x2,
+        /** y position of second rectangle */int y2, /** width of decond rectangle */int w2, 
+        /** height of second rectangle */int h2);
+    
+    
+    /**
+    * Checks to see if the given key is being pressed.
+    */
+    bool pressed(/** The key to check for */ std::string key);
+   
+    /**
+    * Draws a line from point a to point b.
+    */
+    void DrawLine(/** The starting position of the line */ std::pair<int, int> a, 
+        /** The ending position of the line */ std::pair<int, int> b);
+    
+    /** 
+    * Draws lines between a list of points.
+    */
+    void DrawLines(/** A list of points to draw the lines */ std::vector<std::pair<int, int>> points,
+        /** Whether the lines form a closed shape */ bool closed);
+    
+    /** 
+    * Returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting.
+    */
+    bool LineIntersect(/** Starting point of first line */std::pair<int, int> a, 
+        /** Ending point of first line */ std::pair<int, int> b, 
+        /** Starting point of second line */ std::pair<int, int> c, 
+        /** Ending point of second line */ std::pair<int, int> d);
+    
+    /**
+    * Determines if any two lines between the lists intersect (
+    * a list of points determines a CLOSED shape in order)
+    */
+    bool ShapeIntersect(/** First line list */ std::vector<std::pair<int, int>> a, 
+        /** second line list */ std::vector<std::pair<int, int>> b);
 
 private:
     // Screen dimension constants
