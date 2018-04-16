@@ -24,31 +24,54 @@ def degreeToRadians(deg):
     return deg * 3.14159265 / 180
 
 class Asteroid:
-    points = []
+    shapePoints = [(-7, 13), (-5, 8), (2, 10), (1, -2), (-13, -5)]
     isActive = True
     velocity = (0, 0)
+    centerPoint = (0, 0)
 
-    def __init__(self, points, speed):
+    def __init__(self, center, angle):
         print("make asteroid UwU")
-        # TODO generate random velocity based on speed
+        self.centerPoint = center
+        self.velocity = (math.cos(degreeToRadians(angle)), -math.sin(degreeToRadians(angle)))
 
     def tick(self):
         if self.isActive:
-            self.points = tinymath.translatePoints(self.points, tinymath.Vector2D(self.velocity[0], self.velocity[1]))
+            self.centerPoint = tinymath.TranslatePoint(self.centerPoint, self.velocity)
+            tinymath.TranslatePoint(self.centerPoint, self.velocity)
+            self.bounce()
+
+    def bounce(self):
+        leftCollision = False
+        rightCollision = False
+        topCollision = False
+        bottomCollision = False
+
+        for point in self.getPoints():
+            if point[0] < 0 and not leftCollision:
+                self.velocity = (-1 * self.velocity[0], self.velocity[1])
+                leftCollision = True
+            if point[0] > MAX_SIZE and not rightCollision:
+                self.velocity = (-1 * self.velocity[0], self.velocity[1])
+                rightCollision = True
+            if point[1] < 0 and not topCollision:
+                self.velocity = (self.velocity[0], -1 * self.velocity[1])
+                topCollision = True
+            if point[1] > MAX_SIZE and not bottomCollision:
+                self.velocity = (self.velocity[0], -1 * self.velocity[1])
+                bottomCollision = True
 
     def draw(self):
         if self.isActive:
-            engine.SDL_SetRenderDrawColor(255, 255, 255, 255)
-            engine.DrawLines(self.points, True)
+            engine.SetColor(255, 255, 255, 255)
+            engine.DrawLines(self.getPoints(), True)
 
     def getPoints(self):
-        return self.points
+        if not self.isActive:
+            return []
+        return tinymath.TranslatePoints(self.shapePoints, self.centerPoint)
 
     def isActive(self):
         return self.isActive
-
-    def setPoints(self, newPoints):
-        self.points = newPoints
 
     def setActive(self, activeState):
         self.isActive = activeState
@@ -84,7 +107,10 @@ class Bullet:
         # if out of bounds
         if (0 >= self.origin[0] or self.origin[0] >= MAX_SIZE or 0 >= self.origin[1] or self.origin[1] >= MAX_SIZE):
             return True
-        # TODO check collision with all the asteroids in the asteroids list, if colliding, set inactive and return True
+        for asteroid in asteroids:
+            if engine.ShapeIntersect(self.getPoints(), asteroid.getPoints()):
+                asteroid.setActive(False)
+                return True
         return False
 
 class Ship:
@@ -99,8 +125,7 @@ class Ship:
 
     def rotate(self, rot):
         self.rotation += rot;
-        rotationVector = tinymath.Vector2D(self.currentPoints[1][0], self.currentPoints[1][1])
-        self.currentPoints = tinymath.RotatePointsAround(self.basePoints, rotationVector, self.rotation);
+        self.currentPoints = tinymath.RotatePointsAround(self.basePoints, self.currentPoints[1], self.rotation);
 
     def draw(self):
         engine.SetColor(255, 255, 255, 255)
@@ -110,13 +135,13 @@ class Ship:
         return Bullet(self.currentPoints[3], self.rotation)
 
     def checkCollisions(self, asteroids):
-        # TODO check collisions with asteroids
+        if engine.ShapeIntersect(self.currentPoints, asteroid.getPoints()):
+            return True
         return False
 
 ship = Ship(0)
 bullet = False
-# TODO make asteroids
-asteroids = []
+asteroids = [Asteroid((100, 150), 90), Asteroid((250, 125), 35)]
 
 gameWon = False
 gameOver = False
@@ -134,6 +159,8 @@ while not engine.pressed("q") :
     engine.clear()
 
     # TODO draw the asteroids
+    for asteroid in asteroids:
+        asteroid.draw()
     ship.draw()
     if bullet:
         bullet.draw()
@@ -148,6 +175,8 @@ while not engine.pressed("q") :
             bullet = ship.fireBullet()
 
         # TODO move the asteroids
+        for asteroid in asteroids:
+            asteroid.tick()
         if bullet:
             bullet.tick()
             if bullet.checkCollisions(asteroids):
@@ -156,12 +185,15 @@ while not engine.pressed("q") :
         if ship.checkCollisions(asteroids):
             gameOver = True
 
-        #TODO check if any asteroids still alive
+        gameWon = True
+        for asteroid in asteroids:
+            if asteroid.isActive():
+                gameWon = False
 
 
     if gameWon:
         print("game won")
-        # TODO draw game won text
+        engine.RenderCenteredText("You Win!")
 
     if not gameWon and gameOver:
         print("game over")
