@@ -18,7 +18,7 @@ class Star:
 
     def __init__(self):
         self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
-        self.y = random.randint(GROUND_HEIGHT + self.h, SCREEN_HEIGHT - self.h);
+        self.y = random.randint(0, (SCREEN_HEIGHT - GROUND_HEIGHT)- self.h);
         self.vx = random.uniform(0.85, 1.25) * -1;
 
     def draw(self):
@@ -30,7 +30,7 @@ class Star:
         if (self.x - self.w <= 0):
             # self.x = random.randint(int(SCREEN_WIDTH * 1.5), SCREEN_WIDTH * 2);
             self.x = random.randint(int(SCREEN_WIDTH), int(SCREEN_WIDTH * 1.5));
-            self.y = random.randint(0, SCREEN_HEIGHT - self.h);
+            self.y = random.randint(0, (SCREEN_HEIGHT - GROUND_HEIGHT)- self.h);
             self.vx = random.uniform(0.6, 1.25) * -1;
 
 starQueue = [];
@@ -136,7 +136,9 @@ while not engine.pressed("q"):
 
     if game_over:
         # TODO add render centered text to engine
-        engine.RenderText("GAME OVER!", "arial.ttf", 64, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
+        engine.RenderText("GAME OVER!", "arial.ttf", 32, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2);
+        engine.RenderText("YOUR SCORE WAS: " + str(score) + "!", "arial.ttf", 32, SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2) + 32);
+
         print("GAME OVER!");
 
     if engine.pressed("p"):
