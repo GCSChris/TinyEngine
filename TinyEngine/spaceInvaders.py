@@ -65,13 +65,6 @@ class Enemy:
     def disable(self):
         self.enabled = False
         engine.PlaySFX("sounds/Hit1.mp3")
-        
-    def checkCollision(self, colX, colY):
-        if not self.enabled:
-            return False
-        else:
-            return (colX > self.x and colX < self.x + self.w) and (colY > self.y and colY < self.y + self.h)
-            
 
 class Projectile:
     def __init__(self, x, y):
@@ -188,7 +181,9 @@ while not engine.pressed("q") and not hitBottom and not won:
             # handle projectile collisions with enemies here
             for x in range(0, w):
                 for y in range(0, h):
-                    if enemyMatrix[y][x].checkCollision(projectile.x, projectile.y):
+                    if (enemyMatrix[y][x].enabled and engine.RectIntersect(enemyMatrix[y][x].x, 
+                    enemyMatrix[y][x].y, enemyMatrix[y][x].w, enemyMatrix[y][x].h, projectile.x,
+                    projectile.y, projectile.w, projectile.h)):
                         score += scoreMultiplier
                         enemyMatrix[y][x].disable()
 
