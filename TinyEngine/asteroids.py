@@ -25,7 +25,7 @@ def degreeToRadians(deg):
 
 class Asteroid:
     shapePoints = [(-7, 13), (-5, 8), (2, 10), (1, -2), (-13, -5)]
-    isActive = True
+    activeState = True
     velocity = (0, 0)
     centerPoint = (0, 0)
 
@@ -35,7 +35,7 @@ class Asteroid:
         self.velocity = (math.cos(degreeToRadians(angle)), -math.sin(degreeToRadians(angle)))
 
     def tick(self):
-        if self.isActive:
+        if self.activeState:
             self.centerPoint = tinymath.TranslatePoint(self.centerPoint, self.velocity)
             tinymath.TranslatePoint(self.centerPoint, self.velocity)
             self.bounce()
@@ -61,20 +61,20 @@ class Asteroid:
                 bottomCollision = True
 
     def draw(self):
-        if self.isActive:
+        if self.activeState:
             engine.SetColor(255, 255, 255, 255)
             engine.DrawLines(self.getPoints(), True)
 
     def getPoints(self):
-        if not self.isActive:
+        if not self.activeState:
             return []
         return tinymath.TranslatePoints(self.shapePoints, self.centerPoint)
 
     def isActive(self):
-        return self.isActive
+        return self.activeState
 
     def setActive(self, activeState):
-        self.isActive = activeState
+        self.activeState = activeState
 
 
 class Bullet:
@@ -109,6 +109,7 @@ class Bullet:
             return True
         for asteroid in asteroids:
             if engine.ShapeIntersect(self.getPoints(), asteroid.getPoints()):
+                engine.PlaySFX("resources/Explosion.wav")
                 asteroid.setActive(False)
                 return True
         return False
@@ -136,13 +137,13 @@ class Ship:
 
     def checkCollisions(self, asteroids):
         if engine.ShapeIntersect(self.currentPoints, asteroid.getPoints()):
+            engine.PlaySFX("resources/Explosion.wav")
             return True
         return False
 
 ship = Ship(0)
 bullet = False
-asteroids = [Asteroid((100, 150), 90), Asteroid((250, 125), 35)]
-
+asteroids = [Asteroid((100, 150), 90), Asteroid((250, 125), 35), Asteroid((375, 200), 180)]
 gameWon = False
 gameOver = False
 
@@ -158,14 +159,13 @@ while not engine.pressed("q") :
     # Clear the screen
     engine.clear()
 
-    # TODO draw the asteroids
-    for asteroid in asteroids:
-        asteroid.draw()
-    ship.draw()
-    if bullet:
-        bullet.draw()
-
     if not gameOver and not gameWon:
+        for asteroid in asteroids:
+            asteroid.draw()
+        ship.draw()
+        if bullet:
+            bullet.draw()
+
         if engine.pressed("a"):
             ship.rotate(10)
         if engine.pressed("d"):
@@ -187,17 +187,16 @@ while not engine.pressed("q") :
 
         gameWon = True
         for asteroid in asteroids:
-            if asteroid.isActive():
+            isActive = asteroid.isActive()
+            if isActive:
                 gameWon = False
 
 
     if gameWon:
-        print("game won")
-        engine.RenderCenteredText("You Win!")
+        engine.RenderCenteredText("You Win!", "resources/arial.ttf", 40, int(MAX_SIZE/2 - 20))
 
     if not gameWon and gameOver:
-        print("game over")
-        # TODO draw game over text
+        engine.RenderCenteredText("Game Over", "resources/arial.ttf", 40, int(MAX_SIZE/2 - 20))
 
     # Add a little delay
     engine.FrameRateDelay()
