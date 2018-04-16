@@ -494,7 +494,25 @@ bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<floa
 }
 
 bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
-  // TODO loop through both sets of lines points and check for any intersections
+  for (std::vector<std::pair<float, float>>::iterator iterA = a.begin(); iterA < a.end(); iterA++) {
+    for (std::vector<std::pair<float, float>>::iterator iterB = b.begin(); iterB < b.end(); iterB++) {
+      std::pair<float, float> a1 = *iterA;
+      std::pair<float, float> a2 = *(iterA + 1);
+      if (iterA + 1 >= a.end()) {
+        a2 = *(a.begin());
+      }
+
+      std::pair<float, float> b1 = *iterB;
+      std::pair<float, float> b2 = *(iterB + 1);
+      if (iterB + 1 >= b.end()) {
+        b2 = *(b.begin());
+      }
+
+      if (LineIntersect(a1, a2, b1, b2)) {
+        return true;
+      }
+    }
+  }
   return false;
 }
 
