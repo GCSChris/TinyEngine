@@ -29,9 +29,9 @@ class Asteroid:
     velocity = (0, 0)
     centerPoint = (0, 0)
 
-    def __init__(self, center, angle):
-        print("make asteroid UwU")
+    def __init__(self, center, angle, shapePoints):
         self.centerPoint = center
+        self.shapePoints = shapePoints
         self.velocity = (math.cos(degreeToRadians(angle)), -math.sin(degreeToRadians(angle)))
 
     def tick(self):
@@ -136,16 +136,33 @@ class Ship:
         return Bullet(self.currentPoints[3], self.rotation)
 
     def checkCollisions(self, asteroids):
-        if engine.ShapeIntersect(self.currentPoints, asteroid.getPoints()):
-            engine.PlaySFX("resources/Explosion.wav")
-            return True
+        for asteroid in asteroids:
+            if engine.ShapeIntersect(self.currentPoints, asteroid.getPoints()):
+                engine.PlaySFX("resources/Explosion.wav")
+                return True
         return False
 
 ship = Ship(0)
 bullet = False
-asteroids = [Asteroid((100, 150), 90), Asteroid((250, 125), 35), Asteroid((375, 200), 180)]
+asteroidShapes = [
+[(-7, 0), (-4, 4), (0, 7), (2, 4), (7, 0), (4, -4), (0, -7), (-4, -4)],
+[(-5, 0), (-3, 5), (0, 2), (3, 5), (5, 0), (3, -5), (0, -2), (-3, -5)],
+[(-8, 0), (-3, 7), (0, 6), (4, 7), (10, 0), (5, -5), (-3, -5), (-6, -1)],
+[(-7, 13), (-5, 8), (2, 10), (1, -2), (-13, -5)]
+]
+asteroids = [
+Asteroid((100, 150), 70, asteroidShapes[0]),
+Asteroid((250, 125), 35,  asteroidShapes[1]),
+Asteroid((375, 200), -120,  asteroidShapes[2]),
+Asteroid((100, 360), -25,  asteroidShapes[3]),
+Asteroid((175, 100), 254,  asteroidShapes[0]),
+Asteroid((25, 30), 176,  asteroidShapes[1]),
+Asteroid((75, 180), 254,  asteroidShapes[2]),
+Asteroid((325, 15), 176,  asteroidShapes[3])
+]
 gameWon = False
 gameOver = False
+bulletDelay = 0
 
 # END DEFINITIONS, GAME LOOP HERE
 
@@ -166,11 +183,14 @@ while not engine.pressed("q") :
         if bullet:
             bullet.draw()
 
+        bulletDelay = bulletDelay - 1
+
         if engine.pressed("a"):
             ship.rotate(10)
         if engine.pressed("d"):
             ship.rotate(-10)
-        if engine.pressed("space") and not bullet:
+        if engine.pressed("space") and not bullet and bulletDelay <= 0:
+            bulletDelay = 30
             engine.PlaySFX("resources/Pew.wav")
             bullet = ship.fireBullet()
 
