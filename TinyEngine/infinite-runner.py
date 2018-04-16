@@ -5,7 +5,7 @@ import random
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 150
 GROUND_HEIGHT = 10
-engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT)
+engine = mygameengine.SDLGraphicsProgram(SCREEN_WIDTH, SCREEN_HEIGHT, "Space Race!")
 
 game_over = False;
 paused = False;

@@ -13,7 +13,7 @@ w, h = 11, 5;
 MAX_SIZE = 32 * (w + 4)
 playerOffset = 32
 
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
+engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE,"SPACE INVADERS")
 
 class Player:
     w = 16
@@ -27,7 +27,7 @@ class Player:
 
     def draw(self):
         engine.DrawImage("sprites/spaceInvader_player.png", self.x, self.y, self.w, self.h);
-    
+
     def move(self, moveAmount):
         if (self.x + moveAmount > 0 and self.x + moveAmount + self.w < MAX_SIZE):
             self.x = self.x + moveAmount
@@ -37,20 +37,20 @@ class Enemy:
     w = 16
     h = 16
     enabled = True
-    
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        
+
     def draw(self):
         if self.enabled:
             engine.DrawImage("sprites/spaceInvader.png", self.x, self.y, self.w, self.h);
-        
+
     def move(self, moveAmount):
         if self.enabled:
             if (self.x + moveAmount > 0 and self.x + moveAmount + self.w < MAX_SIZE):
                 self.x = self.x + moveAmount
-            
+
     def moveDownRow(self, moveAmount):
         if self.enabled:
             if self.y + moveAmount < MAX_SIZE - playerOffset:
@@ -61,7 +61,7 @@ class Enemy:
                 return True
         else:
             return False
-            
+
     def disable(self):
         self.enabled = False
         engine.PlaySFX("sounds/Hit1.mp3")
@@ -73,19 +73,19 @@ class Projectile:
         self.w = 2
         self.h = 4
         engine.PlaySFX("sounds/Fire3.mp3")
-    
+
     def move(self, speed):
         if (self.y > 0):
             self.y = self.y - speed
             return 0
         else:
             return 1
-        
+
     def draw(self):
         engine.SetColor(255, 255, 255, 255)
         engine.DrawRectangle(self.x, self.y, self.w, self.h, True)
 
-# a 2D array of enemies 
+# a 2D array of enemies
 enemyMatrix = [[Enemy(0,0) for x in range(w)] for y in range(h)]
 
 #enemy speed
@@ -131,10 +131,10 @@ engine.SetFramerate(framerate);
 while not engine.pressed("q") and not hitBottom and not won:
 
     engine.SetBackgroundColor(0, 0, 0, 255)
-	
+
     # Clear the screen
     engine.clear()
-    
+
     #shift enemies left or right as appropriate, and shift down at the end of a row
     if numShifts <= 56 and not restFrame:
         for x in range(0, w):
@@ -148,7 +148,7 @@ while not engine.pressed("q") and not hitBottom and not won:
     # it is a rest frame so do nothing
     elif restFrame:
         restFrame = False
-    # enemies have reached the edge of the screen so move down a row 
+    # enemies have reached the edge of the screen so move down a row
     # and then move back in other direction
     else:
         numShifts = 0
@@ -159,12 +159,12 @@ while not engine.pressed("q") and not hitBottom and not won:
         for x in range(0, w):
             for y in range(0, h):
                 hitBottom = enemyMatrix[y][x].moveDownRow(16)
-    
+
     #draw enemies
     for x in range(0, w):
         for y in range(0, h):
             enemyMatrix[y][x].draw()
-     
+
     #handle player input
     if engine.pressed("left"):
         player.move(0 - playerSpeed)
@@ -172,7 +172,7 @@ while not engine.pressed("q") and not hitBottom and not won:
         player.move(playerSpeed)
     elif engine.pressed("space") and projectile == None:
         projectile = Projectile(player.x + player.w // 2 - 1, player.y)
-            
+
     if (projectile != None):
         projectile.draw()
         if projectile.move(projSpeed) == 1:
@@ -181,7 +181,7 @@ while not engine.pressed("q") and not hitBottom and not won:
             # handle projectile collisions with enemies here
             for x in range(0, w):
                 for y in range(0, h):
-                    if (enemyMatrix[y][x].enabled and engine.RectIntersect(enemyMatrix[y][x].x, 
+                    if (enemyMatrix[y][x].enabled and engine.RectIntersect(enemyMatrix[y][x].x,
                     enemyMatrix[y][x].y, enemyMatrix[y][x].w, enemyMatrix[y][x].h, projectile.x,
                     projectile.y, projectile.w, projectile.h)):
                         score += scoreMultiplier
@@ -189,11 +189,11 @@ while not engine.pressed("q") and not hitBottom and not won:
 
     #draw player
     player.draw()
-    
+
     #draw score
     engine.SetTextColor(255, 255, 255, 255)
     engine.RenderText("score: " + str(score), "arial.ttf", 15, 10, 10)
-    
+
     #check endgame
     if (score == maxScore):
         won = True
@@ -202,19 +202,19 @@ while not engine.pressed("q") and not hitBottom and not won:
     engine.FrameRateDelay()
     # Refresh the screen
     engine.flip()
-    
+
 while won and not engine.pressed("q"):
     engine.clear()
 
     engine.SetTextColor(255, 255, 255, 255)
     engine.RenderText("YOU WIN!!!", "arial.ttf", 25, 150, 200)
-    
+
     engine.flip()
-    
+
 while not won and not engine.pressed("q"):
     engine.clear()
 
     engine.SetTextColor(255, 255, 255, 255)
     engine.RenderText("GAME OVER!", "arial.ttf", 20, 150, 200)
-    
+
     engine.flip()
