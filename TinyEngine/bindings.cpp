@@ -134,7 +134,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	}
 	else {
     //Create window
-    gWindow = SDL_CreateWindow(title, 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow("My Game!", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
     // Check if Window did not create.
     if( gWindow == NULL ){
