@@ -61,7 +61,7 @@ public:
     /**
     * Delay rendering by a given amount.
     */
-    void delay(/** Time in milliseconds to */ int milliseconds);
+    void delay(/** Time in milliseconds to delay. */ int milliseconds);
     
     /**
     * Loops forever.
@@ -77,45 +77,48 @@ public:
     * Draws a rectangle whose upper left corner is at the given coordinates,
     * and has the given dimensions. Can be wireframe or filled.
     */
-    void DrawRectangle(/** desired x position */ int x, /** desired y position */ int y,
-        /** desired rectangle width */ int w, /** desired window height*/ int h, 
-        /** should the rectangle be filled in */ bool fill);
+    void DrawRectangle(/** Desired x position */ int x, /** Desired y position */ int y,
+        /** Desired rectangle width */ int w, /** Desired window height*/ int h, 
+        /** Should the rectangle be filled in */ bool fill);
     
     /** 
     * Sets the renderer's color given an RGB and alpha value.
     */
-    void SetColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
-        /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
+    void SetColor(/** Value of red from 0 to 255. */ int r, /** Value of green from 0 to 255. */ int g,
+        /** Value of blue from 0 to 255. */ int b, /** Value of alpha from 0 to 255. */ int a);
      
     /** 
     * Draw an image at the given X,Y position, with the given dimensions.
     */
-    void DrawImage(/** The filepath */ std::string imgPath, 
-        /** The upper left x position of the image */ int x, 
-        /** The upper left y position of the image */ int y, /** The width of the image */ int w,
-        /** The height of the image */ int h);
+    void DrawImage(/** The filepath. */ std::string imgPath, 
+        /** The upper left x position of the image. */ int x, 
+        /** The upper left y position of the image. */ int y, /** The width of the image. */ int w,
+        /** The height of the image. */ int h);
     
     /**
     * Draws a frame of a sprite sheet.
     */
-    void DrawFrame(/** The filepath */ std::string imgPath, /** The frame to render */ int frameTick,
-        /** The total number of frames */int spriteNumFrames,
-        /** The upper left x position of the image */ int x, 
-        /** The upper left y position of the image */ int y, 
-        /** Width of 1 frame */ int frameWidth, /** Height of 1 frame */ int frameHeight);
+    void DrawFrame(/** The filepath of the spritesheet. */ std::string imgPath, 
+        /** The "tick" number in the current second (for example, the fifth frame in a second would 
+	      be 5 to render. */ int frameTick,
+        /** The total number of frames. */int spriteNumFrames,
+        /** The upper left x position of the image. */ int x, 
+        /** The upper left y position of the image. */ int y, 
+        /** Width of 1 frame in the spritesheet. */ int frameWidth, 
+        /** Height of 1 frame in the spritesheet. */ int frameHeight);
         
     /**
-    * Plays music from the given file.
+    * Plays music (on loop) from the given file.
     */
-    void PlayMusic(/** The filepath of the music file */ std::string path);
+    void PlayMusic(/** The filepath of the music file. */ std::string path);
     
     /**
-    * Toggles if the music is being played, returning if the music is playing after.
+    * Toggles if the music is being played, returning if the music is playing after it is toggled.
     */
     bool ToggleMusic();
     
     /**
-    Plays the sound effect at the given path.
+    * Plays the sound effect at the given path.
     */
     void PlaySFX(/** The filepath of the sound effect file */ std::string path);
     
@@ -141,19 +144,21 @@ public:
     /**
     * Renders the given text centered on the x axis on the screen.
     */
-    void RenderCenteredText(/** Text to render */ std::string text, 
-        /** Name of the font (.ttf) file to render in*/ std::string fontStyle, 
-        /** The font size to render at */ int fontSize, 
-        /** Upper y position of text */int y);
+    void RenderCenteredText(/** Text to render. */ std::string text, 
+        /** Name of the font (.ttf) file to render in. */ std::string fontStyle, 
+        /** The font size to render at. */ int fontSize, 
+        /** Upper y position of text. */int y);
 
     /**
-    * Sets the text render color.
+    * Sets the color to render text in.
     */
-    void SetTextColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
-        /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
+    void SetTextColor(/** Value of red from 0 to 255 */ int r, 
+        /** Value of green from 0 to 255 */ int g,
+        /** Value of blue from 0 to 255 */ int b, 
+	/** Value of alpha from 0 to 255 */ int a);
 
     /**
-    * Sets the background color.
+    * Sets the background color to the given RGBa values.
     */
     void SetBackgroundColor(/** Value of red from 0 to 255 */ int r, /** Value of green from 0 to 255 */ int g,
         /** Value of blue from 0 to 255 */ int b, /** Value of alpha from 0 to 255 */ int a);
@@ -166,17 +171,16 @@ public:
     /**
     * Sets the framerate to cap at the given frames per second.
     */
-    void SetFramerate(/** desired framerate */ int fps);
+    void SetFramerate(/** Desired framerate */ int fps);
     
     /**
     * Checks for intersection between two rectangles. 
     */
     bool RectIntersect(/** x position of first rectangle */ int x1, 
-        /** y position of first rectangle */int y1, /** width of first rectangle */ int w1, 
-        /** height of first rectangle */ int h1, /** x position of second rectangle */ int x2,
-        /** y position of second rectangle */int y2, /** width of decond rectangle */int w2, 
-        /** height of second rectangle */int h2);
-    
+        /** y position of first rectangle */int y1, /** Width of first rectangle */ int w1, 
+        /** Height of first rectangle */ int h1, /** x position of second rectangle */ int x2,
+        /** y position of second rectangle */ int y2, /** Width of decond rectangle */ int w2, 
+        /** Height of second rectangle */ int h2);
     
     /**
     * Checks to see if the given key is being pressed.
@@ -186,8 +190,8 @@ public:
     /**
     * Draws a line from point a to point b.
     */
-    void DrawLine(/** The starting position of the line */ std::pair<int, int> a, 
-        /** The ending position of the line */ std::pair<int, int> b);
+    void DrawLine(/** The starting (x, y) position of the line */ std::pair<int, int> a, 
+        /** The ending (x, y) position of the line */ std::pair<int, int> b);
     
     /** 
     * Draws lines between a list of points.
@@ -211,73 +215,73 @@ public:
         /** second line list */ std::vector<std::pair<int, int>> b);
 
 private:
-    // Screen dimension constants
+    /** The height of the window. */
     int screenHeight;
+    /** The width of the window. */
     int screenWidth;
-    // The window we'll be rendering to
+    
+    /** The window we'll be rendering to. */
     SDL_Window* gWindow;
-    // Our renderer
+    /** Our renderer. */
     SDL_Renderer* gRenderer;
 
-    // the frame count at the beginning of the game loop
+    /** The current frame we are on in a given second of real time. */
     int frameTickCount = 0;
-    // The current game framerate
+    /** The current game framerate. */
     int framerate = 60;
 
-    // The state of the keys
+    /** The state of the all supported keys (pressed or not). */
     static std::map<std::string, int> keymap;
 
+    /** The color to use when rendering text. */
     SDL_Color textColor = { 255, 255, 255, 255 };
+    /** The color to use when rendering the background. */
     SDL_Color backgroundColor = {255, 255, 255, 255};
 };
 
 
-// Initialization function
-// Returns a true or false value based on successful completion of setup.
-// Takes in dimensions of window.
 SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWidth(w),screenHeight(h){
-	// Initialization flag
-	bool success = true;
-	// String to hold any errors that occur.
-	std::stringstream errorStream;
-	// The window we'll be rendering to
-	gWindow = NULL;
-	// Render flag
+    // Initialization flag
+    bool success = true;
+    // String to hold any errors that occur.
+    std::stringstream errorStream;
+    // The window we'll be rendering to
+    gWindow = NULL;
 
-	// Initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO) < 0){
-		errorStream << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
-		success = false;
-	}
-	else {
-    //Create window
-    gWindow = SDL_CreateWindow(title.c_str(), 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
-
-    // Check if Window did not create.
-    if( gWindow == NULL ){
-		  errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
-	    success = false;
-		}
-
-		//Create a Renderer to draw on
-        gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-        // Check if Renderer did not create.
-        if( gRenderer == NULL ){
-            errorStream << "Renderer could not be created! SDL Error: " << SDL_GetError() << "\n";
+    // Initialize SDL
+        if(SDL_Init(SDL_INIT_VIDEO) < 0){
+            errorStream << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
             success = false;
         }
-  	}
+        else {
+            //Create window
+            gWindow = SDL_CreateWindow(title.c_str(), 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
-    TTF_Init(); //TODO
+            // Check if Window did not create.
+            if(gWindow == NULL){
+                errorStream << "Window could not be created! SDL Error: " << SDL_GetError() << "\n";
+                success = false;
+            }
 
-    // If initialization did not work, then print out a list of errors in the constructor.
-    if(!success){
-        errorStream << "SDLGraphicsProgram::SDLGraphicsProgram - Failed to initialize!\n";
-        std::string errors=errorStream.str();
-        SDL_Log("%s\n",errors.c_str());
-    }else{
-        SDL_Log("SDLGraphicsProgram::SDLGraphicsProgram - No SDL, GLAD, or OpenGL, errors detected during initialization\n\n");
-    }
+            //Create a Renderer to draw on
+            gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+            // Check if Renderer did not create.
+            if(gRenderer == NULL){
+                errorStream << "Renderer could not be created! SDL Error: " << SDL_GetError() << "\n";
+                success = false;
+            }
+  	    }
+
+        TTF_Init(); //TODO
+
+        // If initialization did not work, then print out a list of errors in the constructor.
+        if(!success){
+            errorStream << "SDLGraphicsProgram::SDLGraphicsProgram - Failed to initialize!\n";
+            std::string errors=errorStream.str();
+            SDL_Log("%s\n",errors.c_str());
+        } else {
+            SDL_Log("SDLGraphicsProgram::SDLGraphicsProgram - No SDL, GLAD, or OpenGL, errors detected during initialization\n\n");
+        }
 
 }
 
@@ -285,29 +289,29 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWi
 // Proper shutdown of SDL and destroy initialized objects
 SDLGraphicsProgram::~SDLGraphicsProgram(){
     //Destroy window
-	SDL_DestroyWindow( gWindow );
-	// Point gWindow to NULL to ensure it points to nothing.
-	gWindow = NULL;
-	//Quit SDL subsystems
-	SDL_Quit();
+    SDL_DestroyWindow( gWindow );
+    // Point gWindow to NULL to ensure it points to nothing.
+    gWindow = NULL;
+    //Quit SDL subsystems
+    SDL_Quit();
 }
 
 // Initialize OpenGL
 // Setup any of our shaders here.
 bool SDLGraphicsProgram::initGL(){
-	//Success flag
-	bool success = true;
+    //Success flag
+    bool success = true;
 
-	return success;
+    return success;
 }
 
 void SDLGraphicsProgram::SetBackgroundColor(int r, int g, int b, int a) {
-  backgroundColor = {r, g, b, a};
+    backgroundColor = {r, g, b, a};
 }
 
 // Clears the screen
 void SDLGraphicsProgram::clear() {
-  	// Nothing yet!
+    // Nothing yet!
     SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     SDL_RenderClear(gRenderer);
 }
@@ -315,13 +319,13 @@ void SDLGraphicsProgram::clear() {
 // Flip
 // The flip function gets called once per loop
 // It swaps out the previvous frame in a double-buffering system
-void SDLGraphicsProgram::flip(){
-	  // Nothing yet!
+void SDLGraphicsProgram::flip() {
+    // Nothing yet!
     SDL_RenderPresent(gRenderer);
 }
 
 
-void SDLGraphicsProgram::delay(int milliseconds){
+void SDLGraphicsProgram::delay(int milliseconds) {
     SDL_Delay(milliseconds);
 }
 
@@ -336,28 +340,28 @@ void SDLGraphicsProgram::loop(){
     SDL_Event e;
     // Enable text input
     SDL_StartTextInput();
+    
     // While application is running
     while(!quit){
-     	 //Handle events on queue
-		while(SDL_PollEvent( &e ) != 0){
-        	// User posts an event to quit
-	        // An example is hitting the "x" in the corner of the window.
-    	    if(e.type == SDL_QUIT){
-        		quit = true;
-	        }
-      	} // End SDL_PollEvent loop.
+        //Handle events on queue
+        while(SDL_PollEvent(&e) != 0) {
+            // User posts an event to quit
+            if(e.type == SDL_QUIT) {
+                quit = true;
+            }
+        } // End SDL_PollEvent loop.
 
-      	//Update screen of our specified window
-      	SDL_GL_SwapWindow(getSDLWindow());
+        //Update screen of our specified window
+        SDL_GL_SwapWindow(getSDLWindow());
     }
 
-    //Disable text input
+    // Disable text input
     SDL_StopTextInput();
 }
 
 // Get Pointer to Window
 SDL_Window* SDLGraphicsProgram::getSDLWindow(){
-  return gWindow;
+    return gWindow;
 }
 
 // Okay, render our rectangles!
@@ -375,86 +379,86 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 }
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
-  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+    SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
-	SDL_Rect dest = { x, y, w, h };
+    SDL_Rect dest = { x, y, w, h };
 
-  SDL_RenderCopy(gRenderer, texture, NULL, &dest);
+    SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
 static int getNumColumns(std::string fileName, int frameWidth) {
-  SDL_Point dimensions = ResourceManager::instance().getIMGDimensions(fileName);
-  int width = dimensions.x;
-  return (width / frameWidth);
+    SDL_Point dimensions = ResourceManager::instance().getIMGDimensions(fileName);
+    int width = dimensions.x;
+    return (width / frameWidth);
 }
 
 void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int spriteNumFrames,
     int x, int y, int frameWidth, int frameHeight) {
 
-  SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
+    SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
 
-  int currentFrame = frameTick * spriteNumFrames / framerate;
+    int currentFrame = frameTick * spriteNumFrames / framerate;
 
-  int numColumns = getNumColumns(imgPath, frameWidth);
-  int frameRectX = (currentFrame % numColumns) * frameWidth;
-  int frameRectY = (currentFrame / numColumns) * frameHeight;
-  SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
-  SDL_Rect dest = { x, y, frameWidth, frameHeight };
-  SDL_RenderCopy(gRenderer, texture, &src, &dest);
+    int numColumns = getNumColumns(imgPath, frameWidth);
+    int frameRectX = (currentFrame % numColumns) * frameWidth;
+    int frameRectY = (currentFrame / numColumns) * frameHeight;
+    SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
+    SDL_Rect dest = { x, y, frameWidth, frameHeight };
+    SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 
 void SDLGraphicsProgram::PlayMusic(std::string path) {
-  SFXManager::instance().playMusic(path);
+    SFXManager::instance().playMusic(path);
 }
 
 bool SDLGraphicsProgram::ToggleMusic() {
-  SFXManager::instance().toggleMusic();
-  return (Mix_PlayingMusic() != 0);
+    SFXManager::instance().toggleMusic();
+    return (Mix_PlayingMusic() != 0);
 }
 
 void SDLGraphicsProgram::PlaySFX(std::string path) {
-  SFXManager::instance().playSFX(path);
+    SFXManager::instance().playSFX(path);
 }
 
 void SDLGraphicsProgram::SetMusicVolume(int volume) {
-  SFXManager::instance().setMusicVolume(volume);
+    SFXManager::instance().setMusicVolume(volume);
 }
 
 int SDLGraphicsProgram::GetMusicVolume() {
-  SFXManager::instance().getMusicVolume();
+    SFXManager::instance().getMusicVolume();
 }
 
 void SDLGraphicsProgram::SetTextColor(int r, int g, int b, int a) {
-  textColor = { r, g, b, a };
+    textColor = { r, g, b, a };
 }
 
 void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
-  UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
+    UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
 void SDLGraphicsProgram::RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int y) {
-  UIManager::instance().renderCenteredText(gRenderer, text, fontStyle, fontSize, textColor, y, screenWidth);
+    UIManager::instance().renderCenteredText(gRenderer, text, fontStyle, fontSize, textColor, y, screenWidth);
 }
 
 
 void SDLGraphicsProgram::ApplyFrameCap() {
-  int tickCount = SDL_GetTicks();
-  int delayTime = 1000 / framerate - (tickCount - frameTickCount);
-  if (delayTime > 0) {
-    SDL_Delay(delayTime);
-  }
-  frameTickCount = tickCount;
+    int tickCount = SDL_GetTicks();
+    int delayTime = 1000 / framerate - (tickCount - frameTickCount);
+    if (delayTime > 0) {
+        SDL_Delay(delayTime);
+    }
+    frameTickCount = tickCount;
 }
 
 void SDLGraphicsProgram::SetFramerate(int fps) {
-  framerate = fps;
+    framerate = fps;
 }
 
 bool SDLGraphicsProgram::RectIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
-  SDL_Rect r1 = {x1, y1, w1, h1};
-  SDL_Rect r2 = {x2, y2, w2, h2};
+    SDL_Rect r1 = { x1, y1, w1, h1 };
+    SDL_Rect r2 = { x2, y2, w2, h2 };
 
-  return (SDL_HasIntersection(&r1, &r2));
+    return SDL_HasIntersection(&r1, &r2);
 }
 
 std::map<std::string, int> SDLGraphicsProgram::keymap = []
@@ -551,28 +555,26 @@ bool SDLGraphicsProgram::pressed(std::string key){
 
     // from https://stackoverflow.com/questions/11699183/what-is-the-best-way-to-read-input-from-keyboard-using-sdl
     SDL_Event event;
-    while( SDL_PollEvent(&event))
-    {
-        switch(event.type)
-        {
-        case SDL_KEYDOWN:
-            pressed[event.key.keysym.sym] = true;
-            break;
-        case SDL_KEYUP:
-            pressed[event.key.keysym.sym] = false;
-            break;
-        }
+    while( SDL_PollEvent(&event)) {
+        switch(event.type) {
+            case SDL_KEYDOWN:
+                pressed[event.key.keysym.sym] = true;
+                break;
+            case SDL_KEYUP:
+                pressed[event.key.keysym.sym] = false;
+                break;
+            }
     }
 
     return pressed[keymap[key]];
 }
 
-// draws a line from point a to point b
+// Draws a line from point a to point b
 void SDLGraphicsProgram::DrawLine(std::pair<float, float> a, std::pair<float, float> b) {
     SDL_RenderDrawLine(gRenderer, a.first, a.second, b.first, b.second);
 }
 
-// draws a list of line
+// Draws a list of line
 void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, bool closed) {
     for (auto iter = points.begin(); iter < points.end(); iter++) {
         if (iter + 1 == points.end() && closed) {
@@ -582,66 +584,65 @@ void SDLGraphicsProgram::DrawLines(std::vector<std::pair<float, float>> points, 
         }
     }
 }
-// returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
+
+// Returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting
 bool SDLGraphicsProgram::LineIntersect(std::pair<float, float> a, std::pair<float, float> b, std::pair<float, float> c, std::pair<float, float> d) {
-  float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
-  float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
-  float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
+    float denominator = ((b.first - a.first) * (d.second - c.second)) - ((b.second - a.second) * (d.first - c.first));
+    float numerator1 = ((a.second - c.second) * (d.first - c.first)) - ((a.first - c.first) * (d.second - c.second));
+    float numerator2 = ((a.second - c.second) * (b.first - a.first)) - ((a.first - c.first) * (b.second - a.second));
 
-  // Detects parallel lines
-  if (denominator == 0) {
-    // detects coincident lines (parallel and technically the same line) possibly wrong?
-    if (numerator1 == 0 && numerator2 == 0) {
-      // check if either a.first or b.first are in the bounds of [c.first, d.first]
-      int line2LowerX = std::min(c.first, d.first);
-      int line2UpperX = std::max(c.first, d.first);
-      bool xOverlap = (line2LowerX <= a.first && a.first <= line2UpperX) || (line2LowerX <= b.first && b.first <= line2UpperX);
+    // Detects parallel lines
+    if (denominator == 0) {
+        // detects coincident lines (parallel and technically the same line) possibly wrong?
+        if (numerator1 == 0 && numerator2 == 0) {
+            // check if either a.first or b.first are in the bounds of [c.first, d.first]
+            int line2LowerX = std::min(c.first, d.first);
+            int line2UpperX = std::max(c.first, d.first);
+            bool xOverlap = (line2LowerX <= a.first && a.first <= line2UpperX) || (line2LowerX <= b.first && b.first <= line2UpperX);
 
-      int line2LowerY = std::min(c.second, d.second);
-      int line2UpperY = std::max(c.second, d.second);
-      bool yOverlap = (line2LowerY <= a.second && a.second <= line2UpperY) || (line2LowerY <= b.second && b.second <= line2UpperY);
+            int line2LowerY = std::min(c.second, d.second);
+            int line2UpperY = std::max(c.second, d.second);
+            bool yOverlap = (line2LowerY <= a.second && a.second <= line2UpperY) || (line2LowerY <= b.second && b.second <= line2UpperY);
 
-      return xOverlap && yOverlap;
+            return xOverlap && yOverlap;
+        }
+        return false;
     }
-    return false;
-  }
 
-  float r = numerator1 / denominator;
-  float s = numerator2 / denominator;
+    float r = numerator1 / denominator;
+    float s = numerator2 / denominator;
 
-  return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
+    return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
 }
 
 bool SDLGraphicsProgram::ShapeIntersect(std::vector<std::pair<float, float>> a, std::vector<std::pair<float, float>> b) {
-  for (std::vector<std::pair<float, float>>::iterator iterA = a.begin(); iterA < a.end(); iterA++) {
-    for (std::vector<std::pair<float, float>>::iterator iterB = b.begin(); iterB < b.end(); iterB++) {
-      std::pair<float, float> a1 = *iterA;
-      std::pair<float, float> a2 = *(iterA + 1);
-      if (iterA + 1 >= a.end()) {
-        a2 = *(a.begin());
-      }
+    for (std::vector<std::pair<float, float>>::iterator iterA = a.begin(); iterA < a.end(); iterA++) {
+        for (std::vector<std::pair<float, float>>::iterator iterB = b.begin(); iterB < b.end(); iterB++) {
+            std::pair<float, float> a1 = *iterA;
+            std::pair<float, float> a2 = *(iterA + 1);
+            if (iterA + 1 >= a.end()) {
+                a2 = *(a.begin());
+            }
 
-      std::pair<float, float> b1 = *iterB;
-      std::pair<float, float> b2 = *(iterB + 1);
-      if (iterB + 1 >= b.end()) {
-        b2 = *(b.begin());
-      }
+            std::pair<float, float> b1 = *iterB;
+            std::pair<float, float> b2 = *(iterB + 1);
+            if (iterB + 1 >= b.end()) {
+                b2 = *(b.begin());
+            }
 
-      if (LineIntersect(a1, a2, b1, b2)) {
-        return true;
-      }
+            if (LineIntersect(a1, a2, b1, b2)) {
+                return true;
+            }
+        }
     }
-  }
-  return false;
+    return false;
 }
-
 
 // Include the pybindings
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 namespace py = pybind11;
-
 
 // Creates a macro function that will be called
 // whenever the module is imported into python
@@ -677,10 +678,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("DrawLines", &SDLGraphicsProgram::DrawLines)
             .def("LineIntersect", &SDLGraphicsProgram::LineIntersect)
             .def("ShapeIntersect", &SDLGraphicsProgram::ShapeIntersect)
-            .def("SetBackgroundColor", &SDLGraphicsProgram::SetBackgroundColor)
-    ;
-// We do not need to expose everything to our users!
-//            .def("getSDLWindow", &SDLGraphicsProgram::getSDLWindow, py::return_value_policy::reference)
+            .def("SetBackgroundColor", &SDLGraphicsProgram::SetBackgroundColor);
 }
 
 #endif
