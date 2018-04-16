@@ -33,7 +33,7 @@ class SDLGraphicsProgram{
 public:
 
     // Constructor
-    SDLGraphicsProgram(int w, int h);
+    SDLGraphicsProgram(int w, int h, std::string title);
     // Destructor
     ~SDLGraphicsProgram();
     // Setup OpenGL
@@ -118,7 +118,7 @@ private:
 // Initialization function
 // Returns a true or false value based on successful completion of setup.
 // Takes in dimensions of window.
-SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight(h){
+SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWidth(w),screenHeight(h){
 	// Initialization flag
 	bool success = true;
 	// String to hold any errors that occur.
@@ -134,7 +134,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	}
 	else {
     //Create window
-    gWindow = SDL_CreateWindow("My Game!", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow(title.c_str(), 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
     // Check if Window did not create.
     if( gWindow == NULL ){
@@ -536,7 +536,7 @@ PYBIND11_MODULE(mygameengine, m){
     m.doc() = "The TinyEngine is python bindings for common SDL functions"; // Optional docstring
 
     py::class_<SDLGraphicsProgram>(m, "SDLGraphicsProgram")
-            .def(py::init<int,int>(), py::arg("w"), py::arg("h"))   // our constructor
+            .def(py::init<int,int,std::string>(), py::arg("w"), py::arg("h"), py::arg("title"))   // our constructor
             .def("clear", &SDLGraphicsProgram::clear) // Expose member methods
             .def("flip", &SDLGraphicsProgram::flip)
             .def("delay", &SDLGraphicsProgram::delay)
