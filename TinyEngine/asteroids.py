@@ -18,7 +18,7 @@ import math
 import random
 
 MAX_SIZE = 400
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
+engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE, "Asteroids")
 
 def degreeToRadians(deg):
     return deg * 3.14159265 / 180
