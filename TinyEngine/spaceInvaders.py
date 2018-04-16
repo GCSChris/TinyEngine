@@ -89,7 +89,7 @@ class Projectile:
 enemyMatrix = [[Enemy(0,0) for x in range(w)] for y in range(h)]
 
 #enemy speed
-enemySpeed = 1;
+enemySpeed = 2;
 
 #are enemies moving left?
 movingLeft = False
@@ -110,7 +110,7 @@ playerSpeed = 2
 framerate = 30
 
 #stuff for projectiles
-projSpeed = 6
+projSpeed = 4
 projectile = None
 
 #stuff for score
@@ -136,7 +136,7 @@ while not engine.pressed("q") and not hitBottom and not won:
     engine.clear()
     
     #shift enemies left or right as appropriate, and shift down at the end of a row
-    if numShifts <= 112 and not restFrame:
+    if numShifts <= 56 and not restFrame:
         for x in range(0, w):
             for y in range(0, h):
                 if movingLeft:
