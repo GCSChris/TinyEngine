@@ -64,6 +64,7 @@ class Enemy:
             
     def disable(self):
         self.enabled = False
+        engine.PlaySFX("sounds/Hit1.mp3")
         
     def checkCollision(self, colX, colY):
         if not self.enabled:
@@ -78,6 +79,7 @@ class Projectile:
         self.y = y
         self.w = 2
         self.h = 4
+        engine.PlaySFX("sounds/Fire3.mp3")
     
     def move(self, speed):
         if (self.y > 0):

@@ -23,15 +23,11 @@
 #include <fstream>
 #include <vector>
 #include <map>
-#include <string>
 
 #include "SFXManager.h"
 #include "UIManager.h"
 // Purpose:
 // This class sets up a full graphics program using SDL
-//
-//
-//
 class SDLGraphicsProgram{
 public:
 
@@ -128,7 +124,7 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h):screenWidth(w),screenHeight
 	}
 	else {
     //Create window
-    gWindow = SDL_CreateWindow( "Lab", 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow(title, 100, 100, screenWidth, screenHeight, SDL_WINDOW_SHOWN );
 
     // Check if Window did not create.
     if( gWindow == NULL ){
