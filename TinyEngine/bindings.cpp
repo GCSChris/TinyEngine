@@ -259,9 +259,7 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
   SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
-
 	SDL_Rect dest = { x, y, w, h };
-
   SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
@@ -279,10 +277,12 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int sprit
   int currentFrame = frameTick * spriteNumFrames / framerate;
 
   int numColumns = getNumColumns(imgPath, frameWidth);
+
   int frameRectX = (currentFrame % numColumns) * frameWidth;
   int frameRectY = (currentFrame / numColumns) * frameHeight;
   SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
   SDL_Rect dest = { x, y, frameWidth, frameHeight };
+
   SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 
