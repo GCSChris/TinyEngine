@@ -1,21 +1,9 @@
-# Run with:
-#
-# (Linux & Mac) python3.5 test.py -m ./mygameengine.so
-# (Windows) python3.6 test.py -m ./mygameengine.pyd
-#
-# The program should also run with 'python2.7' but you will have
-# to change the 3.5's to 2.7's in your respective build script as
-# well as make sure you compiled with 3.5 or 2.7 load flags.
-#
-# You will see `python3.5-config --includes` for example which corresponds
-# to which version of python you are building.
-# (In fact, run `python3.5-config --includes` in the terminal to see what it does!)
 import mygameengine
 import tinymath
-import math
 
 # Now use some python libraries for random numbers!
 import random
+import math
 
 MAX_SIZE = 400
 engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE, "Asteroids")
@@ -109,7 +97,7 @@ class Bullet:
             return True
         for asteroid in asteroids:
             if engine.ShapeIntersect(self.getPoints(), asteroid.getPoints()):
-                engine.PlaySFX("resources/Explosion.wav")
+                engine.PlaySFX("resources/asteroids/explosion.wav")
                 asteroid.setActive(False)
                 return True
         return False
@@ -138,7 +126,7 @@ class Ship:
     def checkCollisions(self, asteroids):
         for asteroid in asteroids:
             if engine.ShapeIntersect(self.currentPoints, asteroid.getPoints()):
-                engine.PlaySFX("resources/Explosion.wav")
+                engine.PlaySFX("resources/asteroids/explosion.wav")
                 return True
         return False
 
@@ -168,7 +156,7 @@ bulletDelay = 0
 
 # Music from https://opengameart.org/content/space-music-out-there
 # SFX from https://opengameart.org/content/sfx-the-ultimate-2017-8-bit-mini-pack
-engine.PlayMusic("resources/OutThere.wav")
+engine.PlayMusic("resources/asteroids/out-there.wav")
 
 engine.SetBackgroundColor(0, 0, 0, 255)
 engine.SetFramerate(30)
@@ -191,7 +179,7 @@ while not engine.pressed("q") :
             ship.rotate(-10)
         if engine.pressed("space") and not bullet and bulletDelay <= 0:
             bulletDelay = 30
-            engine.PlaySFX("resources/Pew.wav")
+            engine.PlaySFX("resources/asteroids/pew.wav")
             bullet = ship.fireBullet()
 
         # TODO move the asteroids
@@ -213,10 +201,10 @@ while not engine.pressed("q") :
 
 
     if gameWon:
-        engine.RenderCenteredText("You Win!", "resources/arial.ttf", 40, int(MAX_SIZE/2 - 20))
+        engine.RenderCenteredText("You Win!", "resources/asteroids/arial.ttf", 40, int(MAX_SIZE/2 - 20))
 
     if not gameWon and gameOver:
-        engine.RenderCenteredText("Game Over", "resources/arial.ttf", 40, int(MAX_SIZE/2 - 20))
+        engine.RenderCenteredText("Game Over", "resources/asteroids/arial.ttf", 40, int(MAX_SIZE/2 - 20))
 
     # Add a little delay
     engine.FrameRateDelay()

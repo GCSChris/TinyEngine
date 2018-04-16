@@ -26,7 +26,7 @@ class Player:
         self.y = MAX_SIZE - playerOffset;
 
     def draw(self):
-        engine.DrawImage("sprites/spaceInvader_player.png", self.x, self.y, self.w, self.h);
+        engine.DrawImage("resources/space-invaders/space-invader-player.png", self.x, self.y, self.w, self.h);
 
     def move(self, moveAmount):
         if (self.x + moveAmount > 0 and self.x + moveAmount + self.w < MAX_SIZE):
@@ -44,7 +44,7 @@ class Enemy:
 
     def draw(self):
         if self.enabled:
-            engine.DrawImage("sprites/spaceInvader.png", self.x, self.y, self.w, self.h);
+            engine.DrawImage("resources/space-invaders/space-invader.png", self.x, self.y, self.w, self.h);
 
     def move(self, moveAmount):
         if self.enabled:
@@ -64,7 +64,7 @@ class Enemy:
 
     def disable(self):
         self.enabled = False
-        engine.PlaySFX("sounds/Hit1.mp3")
+        engine.PlaySFX("resources/space-invaders/hit.mp3")
 
 class Projectile:
     def __init__(self, x, y):
@@ -72,7 +72,7 @@ class Projectile:
         self.y = y
         self.w = 2
         self.h = 4
-        engine.PlaySFX("sounds/Fire3.mp3")
+        engine.PlaySFX("resources/space-invaders/fire.mp3")
 
     def move(self, speed):
         if (self.y > 0):
@@ -192,7 +192,7 @@ while not engine.pressed("q") and not hitBottom and not won:
 
     #draw score
     engine.SetTextColor(255, 255, 255, 255)
-    engine.RenderText("score: " + str(score), "arial.ttf", 15, 10, 10)
+    engine.RenderText("score: " + str(score), "resources/space-invaders/arial.ttf", 15, 10, 10)
 
     #check endgame
     if (score == maxScore):

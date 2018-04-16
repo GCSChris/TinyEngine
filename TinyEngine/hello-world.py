@@ -18,7 +18,7 @@ class Rocket: # Static images!
 
         # Draw our rocket image file (of dimensions 32 x 64)
         #   at the coordinates 450, 420!
-        engine.DrawImage("rocket.png", x, y, w, h);
+        engine.DrawImage("resources/hello-world/rocket.png", x, y, w, h);
 
 class Braid: # Animated Sprites!
 
@@ -32,7 +32,7 @@ class Braid: # Animated Sprites!
         # Draw the braid guy (dimensions = 130 x 150) at the point (0, 0).
         #   Note that we need to specify the number of frames in
         #   our sprite sheet that we want rendered over one second!
-        engine.DrawFrame("braid.png", frameTick, numFrames, x, y, w, h);
+        engine.DrawFrame("resources/hello-world/braid.png", frameTick, numFrames, x, y, w, h);
 
 class Box:
 
@@ -121,7 +121,7 @@ engine.SetFramerate(60);
 engine.SetBackgroundColor(255, 255, 255, 255);
 
 # Play a song on loop!
-engine.PlayMusic("dean-town.mp3");
+engine.PlayMusic("resources/hello-world/dean-town.mp3");
 
 # Create a bouncing ball!
 ball = BouncingBall();
@@ -165,13 +165,13 @@ while not engine.pressed("q"):
 
     # Set the Color of our text!
     engine.SetTextColor(0, 0, 0, 255);
-    engine.RenderCenteredText("Welcome to TinyEngine!", "arial.ttf", 12, 100);
-    engine.RenderCenteredText("Move the paddle using the A and D Keys!", "arial.ttf", 12, 200);
-    engine.RenderCenteredText("Play a sound by pressing spacebar!", "arial.ttf", 12, 300);
+    engine.RenderCenteredText("Welcome to TinyEngine!", "resources/hello-world/arial.ttf", 12, 100);
+    engine.RenderCenteredText("Move the paddle using the A and D Keys!", "resources/hello-world/arial.ttf", 12, 200);
+    engine.RenderCenteredText("Play a sound by pressing spacebar!", "resources/hello-world/arial.ttf", 12, 300);
 
     # When the player presses space, play an explosion sound!
     if engine.pressed("space"):
-        engine.PlaySFX("explosion.mp3");
+        engine.PlaySFX("resources/hello-world/explosion.mp3");
 
     # Handle player movement!
     if engine.pressed("a"):
