@@ -16,7 +16,7 @@ import mygameengine
 import random
 
 MAX_SIZE = 1000
-engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE)
+engine = mygameengine.SDLGraphicsProgram(MAX_SIZE,MAX_SIZE,"Game!")
 
 class Player:
     w = 16

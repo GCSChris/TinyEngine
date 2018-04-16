@@ -4,7 +4,6 @@
 #include <cmath>
 #include <vector>
 #include <map>
-#include <iostream>
 
 // Forward references of each of the structs
 struct Vector2D;
@@ -77,60 +76,69 @@ struct Vector2D{
         return (*this);
     }
 
-    std::pair<int, int> getPair() {
-      return std::pair<int, int>(x, y);
+    std::pair<float, float> getPair() {
+      return std::pair<float, float>(x, y);
     }
 
 };
 
-float Dot(const Vector2D& a, const Vector2D& b){
+float Dot(std::pair<float, float> aPair, std::pair<float, float> bPair){
+  Vector2D a = Vector2D(aPair.first, aPair.second);
+  Vector2D b = Vector2D(bPair.first, bPair.second);
   float dotProd = (a[0] * b[0]) + (a[1] * b[1]);
   return dotProd;
 }
 
-Vector2D vectorMult(const Vector2D& v, float s){
+std::pair<float, float> vectorMult(std::pair<float, float> vPair, float s){
+  Vector2D v = Vector2D(vPair.first, vPair.second);
   Vector2D vec = Vector2D(v[0] * s, v[1] * s);
-  return vec;
+  return vec.getPair();
 }
 
-Vector2D vectorDiv(const Vector2D& v, float s){
+std::pair<float, float> vectorDiv(std::pair<float, float> vPair, float s){
+  Vector2D v = Vector2D(vPair.first, vPair.second);
   Vector2D vec = Vector2D(v[0] / s, v[1] / s);
-  return vec;
+  return vec.getPair();
 }
 
-Vector2D vectorInverse(const Vector2D& v){
-  return vectorMult(v, -1);
+std::pair<float, float> vectorInverse(std::pair<float, float> vPair){
+  return vectorMult(vPair, -1);
 }
 
-float Magnitude(const Vector2D& v){
+float Magnitude(std::pair<float, float> vPair){
+  Vector2D v = Vector2D(vPair.first, vPair.second);
   float squares = (v[0] * v[0]) + (v[1] * v[1]);
   float mag = sqrt(squares);
   return mag;
 }
 
 
-Vector2D vectorAdd(const Vector2D& a, const Vector2D& b){
+std::pair<float, float> vectorAdd(std::pair<float, float> aPair, std::pair<float, float> bPair){
+  Vector2D a = Vector2D(aPair.first, aPair.second);
+  Vector2D b = Vector2D(bPair.first, bPair.second);
   Vector2D vec = Vector2D(a[0] + b[0], a[1] + b[1]);
-  return vec;
+  return vec.getPair();
 }
 
-Vector2D vectorSub(const Vector2D& a, const Vector2D& b){
+std::pair<float, float> vectorSub(std::pair<float, float> aPair, std::pair<float, float> bPair){
+  Vector2D a = Vector2D(aPair.first, aPair.second);
+  Vector2D b = Vector2D(bPair.first, bPair.second);
   Vector2D vec = Vector2D(a[0] - b[0], a[1] - b[1]);
-  return vec;
+  return vec.getPair();
 }
 
 // Vector Projection - Projects b onto a
-Vector2D Project(const Vector2D& a, const Vector2D& b){
-	float magA = Magnitude(a);
-  float scalar = Dot(a, b) / (magA * magA);
-  Vector2D vec = vectorMult(a, scalar);
-  return vec;
+std::pair<float, float> Project(std::pair<float, float> aPair, std::pair<float, float> bPair){
+  float magA = Magnitude(aPair);
+  float scalar = Dot(aPair, bPair) / (magA * magA);
+  return vectorMult(aPair, scalar);
 }
 
-Vector2D Normalize(const Vector2D& v){
-  float magnitude = Magnitude(v);
+std::pair<float, float> Normalize(std::pair<float, float> vPair){
+  Vector2D v = Vector2D(vPair.first, vPair.second);
+  float magnitude = Magnitude(vPair);
   Vector2D vec = Vector2D(v.x / magnitude, v.y / magnitude);
-  return vec;
+  return vec.getPair();
 }
 
 // Matrix 2D represents 2x2 matrices in Math
@@ -177,40 +185,35 @@ public:
 
 // Matrix Multiplication
 Matrix2D multMatrixMatrix(const Matrix2D& A, const Matrix2D& B){
-  float p00 = Dot(Vector2D(A[0][0], A[0][1]), Vector2D(B[0][0], B[1][0]));
-  float p01 = Dot(Vector2D(A[0][0], A[0][1]), Vector2D(B[0][1], B[1][1]));
-  float p10 = Dot(Vector2D(A[1][0], A[1][1]), Vector2D(B[0][0], B[1][0]));
-  float p11 = Dot(Vector2D(A[1][0], A[1][1]), Vector2D(B[0][1], B[1][1]));
+  float p00 = Dot(Vector2D(A[0][0], A[0][1]).getPair(), Vector2D(B[0][0], B[1][0]).getPair());
+  float p01 = Dot(Vector2D(A[0][0], A[0][1]).getPair(), Vector2D(B[0][1], B[1][1]).getPair());
+  float p10 = Dot(Vector2D(A[1][0], A[1][1]).getPair(), Vector2D(B[0][0], B[1][0]).getPair());
+  float p11 = Dot(Vector2D(A[1][0], A[1][1]).getPair(), Vector2D(B[0][1], B[1][1]).getPair());
   Matrix2D mat2D = Matrix2D(p00, p01,
 							              p10, p11);
   return mat2D;
 }
 
 // Matrix multiply by a vector
-Vector2D multMatrixVector(const Matrix2D& M, const Vector2D& v){
-  float x = Dot(Vector2D(M[0][0], M[0][1]), v);
-  float y = Dot(Vector2D(M[1][0], M[1][1]), v);
+Vector2D multMatrixVector(const Matrix2D& M, std::pair<float, float> vPair){
+  float x = Dot(Vector2D(M[0][0], M[0][1]).getPair(), vPair);
+  float y = Dot(Vector2D(M[1][0], M[1][1]).getPair(), vPair);
   Vector2D vec = Vector2D(x, y);
   return vec;
 }
 
 // Rotate a single point around another point, returning the result
-std::pair<int, int> rotatePoint(std::pair<int, int> point, const Vector2D rotPoint, int degRot) {
-  // TODO rotate the given vector around the given point by degrees
-  std::cout << "rotating point: " << point.first << " " << point.second  << " by degrees: " << degRot << std::endl;
-  Vector2D pointVect = Vector2D(point.first, point.second);
-  Vector2D shiftedPoint = vectorSub(pointVect, rotPoint);
+std::pair<float, float> rotatePoint(std::pair<float, float> point, const std::pair<float, float> rotPoint, int degRot) {
+  std::pair<float, float> shiftedPoint = vectorSub(point, rotPoint);
   float radians = degRot * 3.14159265 / 180;
   Matrix2D matrix = Matrix2D(cos(radians), -sin(radians), sin(radians), cos(radians));
   Vector2D rotatedPoint = multMatrixVector(matrix, shiftedPoint);
-  rotatedPoint = vectorAdd(rotatedPoint, rotPoint);
-  std::cout << "rotated point: " << rotatedPoint.x << " " << rotatedPoint.y << std::endl;
-  return rotatedPoint.getPair();
+  return vectorAdd(rotatedPoint.getPair(), rotPoint);
 }
 
 // Rotate points around another point, return the resulting list of points
-std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, int>> points, Vector2D rotPoint, int degRot) {
-  std::vector<std::pair<int, int>> newPoints;
+std::vector<std::pair<float, float>> rotatePointsAround(std::vector<std::pair<float, float>> points, std::pair<float, float> rotPoint, int degRot) {
+  std::vector<std::pair<float, float>> newPoints;
   for (auto it = points.begin(); it < points.end(); it++) {
     newPoints.push_back(rotatePoint(*it, rotPoint, degRot));
   }
@@ -219,7 +222,7 @@ std::vector<std::pair<int, int>> rotatePointsAround(std::vector<std::pair<int, i
 }
 
 // Rotates the points around their center (average point), returning the resulting list of points
-std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> points, int degRot) {
+std::vector<std::pair<float, float>> rotatePoints(std::vector<std::pair<float, float>> points, int degRot) {
   float avgX = 0;
   float avgY = 0;
   int count = 0;
@@ -230,19 +233,16 @@ std::vector<std::pair<int, int>> rotatePoints(std::vector<std::pair<int, int>> p
     count++;
   }
 
-  return rotatePointsAround(points, Vector2D(avgX / count, avgY / count), degRot);
+  return rotatePointsAround(points, std::pair<float,float>(avgX / count, avgY / count), degRot);
 }
 
 
-std::pair<int, int> translatePoint(std::pair<int, int> point, Vector2D translation) {
-  Vector2D vect = Vector2D(point.first, point.second);
-  vect += translation;
-  std::pair<int, int> result = vect.getPair();
-  return result;
+std::pair<float, float> translatePoint(std::pair<float, float> point, std::pair<float, float> translation) {
+  return vectorAdd(point, translation);
 }
 
-std::vector<std::pair<int, int>> translatePoints(std::vector<std::pair<int, int>> points, Vector2D translation) {
-  std::vector<std::pair<int, int>> newPoints;
+std::vector<std::pair<float, float>> translatePoints(std::vector<std::pair<float, float>> points, std::pair<float, float> translation) {
+  std::vector<std::pair<float, float>> newPoints;
   for (auto it = points.begin(); it < points.end(); it++) {
     newPoints.push_back(translatePoint(*it, translation));
   }
