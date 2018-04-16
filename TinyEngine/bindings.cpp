@@ -74,6 +74,7 @@ public:
 
     // Renders the given text
     void RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y);
+    void RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int x);
 
     void SetTextColor(int r, int g, int b, int a);
 
@@ -318,6 +319,11 @@ void SDLGraphicsProgram::RenderText(std::string text, std::string fontStyle, int
   UIManager::instance().renderText(gRenderer, text, fontStyle, fontSize, textColor, x, y);
 }
 
+void SDLGraphicsProgram::RenderCenteredText(std::string text, std::string fontStyle, int fontSize, int y) {
+  UIManager::instance().renderCenteredText(gRenderer, text, fontStyle, fontSize, textColor, y, screenWidth);
+}
+
+
 void SDLGraphicsProgram::ApplyFrameCap() {
   int tickCount = SDL_GetTicks();
   int delayTime = 1000 / framerate - (tickCount - frameTickCount);
@@ -549,6 +555,7 @@ PYBIND11_MODULE(mygameengine, m){
             .def("SetMusicVolume", &SDLGraphicsProgram::SetMusicVolume)
             .def("GetMusicVolume", &SDLGraphicsProgram::GetMusicVolume)
             .def("RenderText", &SDLGraphicsProgram::RenderText)
+            .def("RenderCenteredText", &SDLGraphicsProgram::RenderCenteredText)
             .def("FrameRateDelay", &SDLGraphicsProgram::ApplyFrameCap)
             .def("SetFramerate", &SDLGraphicsProgram::SetFramerate)
             .def("RectIntersect", &SDLGraphicsProgram::RectIntersect)
