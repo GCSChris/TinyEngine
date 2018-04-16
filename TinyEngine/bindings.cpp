@@ -36,97 +36,97 @@ public:
     * Constructs a new SDL graphics program.
     */
     SDLGraphicsProgram(/** desired window width */int w, /** desired window width */int h);
-    
-    
+
+
     /**
     * Destructs a SDL graphics program.
     */
     ~SDLGraphicsProgram();
-    
+
     /**
     * Setup OpenGL.
     */
     bool initGL();
-    
+
     /**
     * Clears the screen.
     */
     void clear();
-    
+
     /**
     * Renders the next flame by flipping to the new buffer.
     */
     void flip();
-    
+
     /**
     * Delay rendering by a given amount.
     */
     void delay(/** Time in milliseconds to delay. */ int milliseconds);
-    
+
     /**
     * Loops forever.
     */
     void loop();
-    
+
     /**
     * Retrieve a pointer to the SDL Window.
     */
     SDL_Window* getSDLWindow();
-    
+
     /**
     * Draws a rectangle whose upper left corner is at the given coordinates,
     * and has the given dimensions. Can be wireframe or filled.
     */
     void DrawRectangle(/** Desired x position */ int x, /** Desired y position */ int y,
-        /** Desired rectangle width */ int w, /** Desired window height*/ int h, 
+        /** Desired rectangle width */ int w, /** Desired window height*/ int h,
         /** Should the rectangle be filled in */ bool fill);
-    
-    /** 
+
+    /**
     * Sets the renderer's color given an RGB and alpha value.
     */
     void SetColor(/** Value of red from 0 to 255. */ int r, /** Value of green from 0 to 255. */ int g,
         /** Value of blue from 0 to 255. */ int b, /** Value of alpha from 0 to 255. */ int a);
-     
-    /** 
+
+    /**
     * Draw an image at the given X,Y position, with the given dimensions.
     */
-    void DrawImage(/** The filepath. */ std::string imgPath, 
-        /** The upper left x position of the image. */ int x, 
+    void DrawImage(/** The filepath. */ std::string imgPath,
+        /** The upper left x position of the image. */ int x,
         /** The upper left y position of the image. */ int y, /** The width of the image. */ int w,
         /** The height of the image. */ int h);
-    
+
     /**
     * Draws a frame of a sprite sheet.
     */
-    void DrawFrame(/** The filepath of the spritesheet. */ std::string imgPath, 
-        /** The "tick" number in the current second (for example, the fifth frame in a second would 
+    void DrawFrame(/** The filepath of the spritesheet. */ std::string imgPath,
+        /** The "tick" number in the current second (for example, the fifth frame in a second would
 	      be 5 to render. */ int frameTick,
         /** The total number of frames. */int spriteNumFrames,
-        /** The upper left x position of the image. */ int x, 
-        /** The upper left y position of the image. */ int y, 
-        /** Width of 1 frame in the spritesheet. */ int frameWidth, 
+        /** The upper left x position of the image. */ int x,
+        /** The upper left y position of the image. */ int y,
+        /** Width of 1 frame in the spritesheet. */ int frameWidth,
         /** Height of 1 frame in the spritesheet. */ int frameHeight);
-        
+
     /**
     * Plays music (on loop) from the given file.
     */
     void PlayMusic(/** The filepath of the music file. */ std::string path);
-    
+
     /**
     * Toggles if the music is being played, returning if the music is playing after it is toggled.
     */
     bool ToggleMusic();
-    
+
     /**
     * Plays the sound effect at the given path.
     */
     void PlaySFX(/** The filepath of the sound effect file */ std::string path);
-    
+
     /**
     * Set the music volume from 0 to 128.
     */
     void SetMusicVolume(/** The volume. Must be between 0 and 128 */ int volume);
-    
+
     /**
     * Gets the currently set music volume.
     */
@@ -135,26 +135,25 @@ public:
     /**
     * Renders the given text.
     */
-    void RenderText(/** Text to render */ std::string text, 
+    void RenderText(/** Text to render */ std::string text,
         /** Name of the font (.ttf) file to render in*/ std::string fontStyle,
         /** The font size to render at */ int fontSize, /** left hand x position of text */ int x,
         /** Upper y position of text */ int y);
-        
-    
+
     /**
     * Renders the given text centered on the x axis on the screen.
     */
-    void RenderCenteredText(/** Text to render. */ std::string text, 
-        /** Name of the font (.ttf) file to render in. */ std::string fontStyle, 
-        /** The font size to render at. */ int fontSize, 
+    void RenderCenteredText(/** Text to render. */ std::string text,
+        /** Name of the font (.ttf) file to render in. */ std::string fontStyle,
+        /** The font size to render at. */ int fontSize,
         /** Upper y position of text. */int y);
 
     /**
     * Sets the color to render text in.
     */
-    void SetTextColor(/** Value of red from 0 to 255 */ int r, 
+    void SetTextColor(/** Value of red from 0 to 255 */ int r,
         /** Value of green from 0 to 255 */ int g,
-        /** Value of blue from 0 to 255 */ int b, 
+        /** Value of blue from 0 to 255 */ int b,
 	/** Value of alpha from 0 to 255 */ int a);
 
     /**
@@ -167,51 +166,51 @@ public:
     * Should be called at the end of each game loop. Used for frame limiting.
     */
     void ApplyFrameCap();
-    
+
     /**
     * Sets the framerate to cap at the given frames per second.
     */
     void SetFramerate(/** Desired framerate */ int fps);
-    
+
     /**
-    * Checks for intersection between two rectangles. 
+    * Checks for intersection between two rectangles.
     */
-    bool RectIntersect(/** x position of first rectangle */ int x1, 
-        /** y position of first rectangle */int y1, /** Width of first rectangle */ int w1, 
+    bool RectIntersect(/** x position of first rectangle */ int x1,
+        /** y position of first rectangle */int y1, /** Width of first rectangle */ int w1,
         /** Height of first rectangle */ int h1, /** x position of second rectangle */ int x2,
-        /** y position of second rectangle */ int y2, /** Width of decond rectangle */ int w2, 
+        /** y position of second rectangle */ int y2, /** Width of decond rectangle */ int w2,
         /** Height of second rectangle */ int h2);
-    
+
     /**
     * Checks to see if the given key is being pressed.
     */
     bool pressed(/** The key to check for */ std::string key);
-   
+
     /**
     * Draws a line from point a to point b.
     */
-    void DrawLine(/** The starting (x, y) position of the line */ std::pair<int, int> a, 
+    void DrawLine(/** The starting (x, y) position of the line */ std::pair<int, int> a,
         /** The ending (x, y) position of the line */ std::pair<int, int> b);
-    
-    /** 
+
+    /**
     * Draws lines between a list of points.
     */
     void DrawLines(/** A list of points to draw the lines */ std::vector<std::pair<int, int>> points,
         /** Whether the lines form a closed shape */ bool closed);
-    
-    /** 
+
+    /**
     * Returns if the given lines (determines by end points of (a,b) and (c,d)) are intersecting.
     */
-    bool LineIntersect(/** Starting point of first line */std::pair<int, int> a, 
-        /** Ending point of first line */ std::pair<int, int> b, 
-        /** Starting point of second line */ std::pair<int, int> c, 
+    bool LineIntersect(/** Starting point of first line */std::pair<int, int> a,
+        /** Ending point of first line */ std::pair<int, int> b,
+        /** Starting point of second line */ std::pair<int, int> c,
         /** Ending point of second line */ std::pair<int, int> d);
-    
+
     /**
     * Determines if any two lines between the lists intersect (
     * a list of points determines a CLOSED shape in order)
     */
-    bool ShapeIntersect(/** First line list */ std::vector<std::pair<int, int>> a, 
+    bool ShapeIntersect(/** First line list */ std::vector<std::pair<int, int>> a,
         /** second line list */ std::vector<std::pair<int, int>> b);
 
 private:
@@ -219,7 +218,7 @@ private:
     int screenHeight;
     /** The width of the window. */
     int screenWidth;
-    
+
     /** The window we'll be rendering to. */
     SDL_Window* gWindow;
     /** Our renderer. */
@@ -285,7 +284,6 @@ SDLGraphicsProgram::SDLGraphicsProgram(int w, int h, std::string title):screenWi
 
 }
 
-
 // Proper shutdown of SDL and destroy initialized objects
 SDLGraphicsProgram::~SDLGraphicsProgram(){
     //Destroy window
@@ -324,11 +322,9 @@ void SDLGraphicsProgram::flip() {
     SDL_RenderPresent(gRenderer);
 }
 
-
 void SDLGraphicsProgram::delay(int milliseconds) {
     SDL_Delay(milliseconds);
 }
-
 
 //Loops forever!
 void SDLGraphicsProgram::loop(){
@@ -340,7 +336,7 @@ void SDLGraphicsProgram::loop(){
     SDL_Event e;
     // Enable text input
     SDL_StartTextInput();
-    
+
     // While application is running
     while(!quit){
         //Handle events on queue
@@ -380,9 +376,7 @@ void SDLGraphicsProgram::SetColor(int r, int g, int b, int a) {
 
 void SDLGraphicsProgram::DrawImage(std::string imgPath, int x, int y, int w, int h) {
     SDL_Texture* texture = ResourceManager::instance().getTexture(imgPath, gRenderer);
-
     SDL_Rect dest = { x, y, w, h };
-
     SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
@@ -400,10 +394,12 @@ void SDLGraphicsProgram::DrawFrame(std::string imgPath, int frameTick, int sprit
     int currentFrame = frameTick * spriteNumFrames / framerate;
 
     int numColumns = getNumColumns(imgPath, frameWidth);
+
     int frameRectX = (currentFrame % numColumns) * frameWidth;
     int frameRectY = (currentFrame / numColumns) * frameHeight;
     SDL_Rect src = { frameRectX, frameRectY, frameWidth, frameHeight };
     SDL_Rect dest = { x, y, frameWidth, frameHeight };
+
     SDL_RenderCopy(gRenderer, texture, &src, &dest);
 }
 

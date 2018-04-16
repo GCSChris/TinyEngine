@@ -28,6 +28,7 @@ public:
 		}
 
 		SDL_Point dimensions = { surface->w, surface->h };
+    SDL_FreeSurface(surface);
 		return dimensions;
 	}
 
@@ -76,9 +77,9 @@ public:
             SDL_Log("Failed to allocate surface");
         } else {
             SDL_Log("Allocating memory for texture");
-		    // Create a texture from our surface
+		        // Create a texture from our surface
             // Textures run faster and take advantage of hardware acceleration
-			SDL_SetColorKey(spriteSheet, SDL_TRUE, SDL_MapRGB(spriteSheet->format, 0, 255, 0));
+			      SDL_SetColorKey(spriteSheet, SDL_TRUE, SDL_MapRGB(spriteSheet->format, 0, 255, 0));
             SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, spriteSheet);
             textures_.insert(std::pair<std::string, SDL_Texture*>(resource, texture));
             SDL_FreeSurface(spriteSheet);
@@ -185,7 +186,7 @@ private:
 	static ResourceManager* inst_;
 
 	/** Mapping of cached SDL_Textures */
-    std::map<std::string, SDL_Texture*> textures_;
+  std::map<std::string, SDL_Texture*> textures_;
 	/** Mapping of cached Mix_Music */
 	std::map<std::string, Mix_Music*> music_;
 	/** Mapping of cached Mix_Chunk */
