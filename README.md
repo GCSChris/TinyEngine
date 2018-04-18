@@ -1,19 +1,30 @@
-# FinalProject - TinyEngine
-
-Note: There is only 1 part to the final project. This is it--the grand finale!
+# Tiny Engine
+### https://tinyenginecs4850.wordpress.com/
 
 ## Team
 
 Team Name: Bjarne Stroustrup Appreciation Station
 Option Chosen: Option 2
 
-
-Update your Team member Names here (Up to 4) You will work with this same team through parts 1, 2, and 3.
-
+Development Team:
 - Tyler Gier
 - Christopher DiNome
 - Caroline Pasyanos
 
+## TinyEngine: Building from Source (Currently source is only buildable via Windows using MinGW)
+- Clone the Github Repo
+- Install Python3, Pip3 and Pybind11
+	If Pip3 is not installed, you can install it using the "get-pip.py" file in the repo.
+- Install SDL2, SDL_image, SDL_ttf and SDL_mixer
+- Navigate to the cloned repo
+- Run the appropriate build script for your OS. This will produce 2 .pyd files (tinyengine.pyd and tinymath.pyd)
+- Open up a new Python script and import tinyengine (importing tinymath is optional but will give you additional access to math functions)
+- Run the Python script using "python3 your-python-file.py"
+
+If you run into any issues, make sure the .DLL files (included in the repo) and the .pyd files (Produced from the build script) are in your project folder.
+
+
+# Class Project Logisitics Below this Point
 
 ## Final Project - Description
 
