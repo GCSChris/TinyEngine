@@ -62,6 +62,8 @@ class Player:
 
     def jump(self):
         self.vy -= 4;
+        engine.PlaySFX("resources/space-race/jump.wav");
+
 
     def upBooster(self):
         self.vy -= 3.5;
@@ -104,7 +106,7 @@ starQueue = [];
 FRAMERATE = 60;
 engine.SetFramerate(FRAMERATE);
 frameTick = 0;
-engine.PlayMusic("resources/space-race/music.wav");
+engine.PlayMusic("resources/space-race/music.mp3");
 player = Player(50);
 
 def endGameLoop(frameTick):
