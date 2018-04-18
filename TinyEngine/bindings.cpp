@@ -299,7 +299,7 @@ bool GameEngine::initGL(){
 }
 
 void GameEngine::SetBackgroundColor(int r, int g, int b, int a) {
-    backgroundColor = {r, g, b, a};
+    backgroundColor = { (uint8_t) r, (uint8_t) g, (uint8_t) b, (uint8_t) a };
 }
 
 // Clears the screen
@@ -420,7 +420,7 @@ int GameEngine::GetMusicVolume() {
 }
 
 void GameEngine::SetTextColor(int r, int g, int b, int a) {
-    textColor = { r, g, b, a };
+    textColor = { (uint8_t) r, (uint8_t) g, (uint8_t) b, (uint8_t) a };
 }
 
 void GameEngine::RenderText(std::string text, std::string fontStyle, int fontSize, int x, int y) {
