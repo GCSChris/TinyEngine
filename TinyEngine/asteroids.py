@@ -88,7 +88,7 @@ class Bullet:
         self.origin = (newX, newY)
 
     def draw(self):
-        engine.SetColor(255, 255, 255, 255)
+        engine.SetColor(0, 204, 102, 255)
         engine.DrawLines(self.getPoints(), False)
 
     def checkCollisions(self, asteroids):
@@ -114,10 +114,10 @@ class Ship:
 
     def rotate(self, rot):
         self.rotation += rot;
-        self.currentPoints = tinymath.RotatePointsAround(self.basePoints, self.currentPoints[1], self.rotation);
+        self.currentPoints = tinymath.RotatePointsAround(self.currentPoints, self.currentPoints[1], rot);
 
     def draw(self):
-        engine.SetColor(255, 255, 255, 255)
+        engine.SetColor(0, 204, 102, 255)
         engine.DrawLines(self.currentPoints, True)
 
     def fireBullet(self):
@@ -130,8 +130,29 @@ class Ship:
                 return True
         return False
 
+    def move(self, forward):
+        mvmtVect = tinymath.RotatePoint((1,0), (0,0), self.rotation)
+        if not forward:
+            mvmtVect = tinymath.vInverse(mvmtVect)
+        self.stayInBounds(mvmtVect)
+        self.currentPoints = tinymath.TranslatePoints(self.currentPoints, mvmtVect)
+
+    def stayInBounds(self, mvmtVect):
+        inBounds = True
+        for p in self.currentPoints:
+            inBounds = (0 <= p[0] and p[0] <= MAX_SIZE) and (0 <= p[1] and p[1] <= MAX_SIZE)
+        if not inBounds:
+            mvmtVect = tinymath.vInverse(mvmtVect)
+            self.currentPoints = tinymath.TranslatePoints(self.currentPoints, mvmtVect)
+
+# Pre-loop definitions/setup
+
 ship = Ship(0)
-bullet = False
+
+bulletDelay = 0
+bullets = []
+MAX_BULLETS = 3
+
 asteroidShapes = [
 [(-7, 0), (-4, 4), (0, 7), (2, 4), (7, 0), (4, -4), (0, -7), (-4, -4)],
 [(-5, 0), (-3, 5), (0, 2), (3, 5), (5, 0), (3, -5), (0, -2), (-3, -5)],
@@ -148,9 +169,9 @@ Asteroid((25, 30), 176,  asteroidShapes[1]),
 Asteroid((75, 180), 254,  asteroidShapes[2]),
 Asteroid((325, 15), 176,  asteroidShapes[3])
 ]
+
 gameWon = False
 gameOver = False
-bulletDelay = 0
 
 # END DEFINITIONS, GAME LOOP HERE
 
@@ -168,27 +189,37 @@ while not engine.pressed("q") :
         for asteroid in asteroids:
             asteroid.draw()
         ship.draw()
-        if bullet:
-            bullet.draw()
+        i = 0
+        while i < len(bullets):
+            bullets[i].draw()
+            i += 1
 
-        bulletDelay = bulletDelay - 1
+        if (bulletDelay > 0):
+            bulletDelay = bulletDelay - 1
 
         if engine.pressed("a"):
-            ship.rotate(10)
+            ship.rotate(-5)
         if engine.pressed("d"):
-            ship.rotate(-10)
-        if engine.pressed("space") and not bullet and bulletDelay <= 0:
+            ship.rotate(5)
+        if engine.pressed("w"):
+            ship.move(True)
+        if engine.pressed("s"):
+            ship.move(False)
+        if engine.pressed("space") and len(bullets) < MAX_BULLETS and bulletDelay <= 0:
             bulletDelay = 30
             engine.PlaySFX("resources/asteroids/pew.wav")
-            bullet = ship.fireBullet()
+            bullets.append(ship.fireBullet())
 
         # TODO move the asteroids
         for asteroid in asteroids:
             asteroid.tick()
-        if bullet:
-            bullet.tick()
-            if bullet.checkCollisions(asteroids):
-                bullet = False
+        i = 0
+        while i < len(bullets):
+            bullets[i].tick()
+            if bullets[i].checkCollisions(asteroids):
+                bullets.remove(bullets[i])
+            else:
+                i += 1
 
         if ship.checkCollisions(asteroids):
             gameOver = True
