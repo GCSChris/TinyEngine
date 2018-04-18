@@ -64,7 +64,6 @@ class Player:
         self.vy -= 4;
         engine.PlaySFX("resources/space-race/jump.wav");
 
-
     def upBooster(self):
         self.vy -= 3.5;
 
