@@ -12,6 +12,8 @@ Development Team:
 - Christopher DiNome
 - Caroline Pasyanos
 
+Note: For hello-world.py, the error messages printed are due to the RGB format of the braid spritesheet. 
+
 ## TinyEngine: Building from Source (via Windows using MinGW)
 - Clone the Github Repo
 - Install Python3, Pip3 and Pybind11
