@@ -207,7 +207,7 @@ while won and not engine.pressed("q"):
     engine.clear()
 
     engine.SetTextColor(255, 255, 255, 255)
-    engine.RenderText("YOU WIN!!!", "arial.ttf", 25, 150, 200)
+    engine.RenderText("YOU WIN!!!", "resources/space-invaders/arial.ttf", 25, 150, 200)
 
     engine.flip()
 
@@ -215,6 +215,6 @@ while not won and not engine.pressed("q"):
     engine.clear()
 
     engine.SetTextColor(255, 255, 255, 255)
-    engine.RenderText("GAME OVER!", "arial.ttf", 20, 150, 200)
+    engine.RenderText("GAME OVER!", "resources/space-invaders/arial.ttf", 20, 150, 200)
 
     engine.flip()
