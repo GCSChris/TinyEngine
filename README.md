@@ -1,5 +1,6 @@
 # Tiny Engine
-### https://tinyenginecs4850.wordpress.com/
+### [Project Webpage](https://tinyenginecs4850.wordpress.com/)
+### [Project Trailer](https://youtu.be/TnI-HnQDgd8)
 
 ## Team
 
